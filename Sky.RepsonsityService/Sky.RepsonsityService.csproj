@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <Platforms>AnyCPU;x64</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="IService\INormalRoleRepsonsityService.cs" />
+    <Compile Remove="IService\INormalUserRepsonsityService.cs" />
+    <Compile Remove="IService\INormalUserRoleRepsonsityService.cs" />
+    <Compile Remove="Service\NormalRoleRepsonsityService.cs" />
+    <Compile Remove="Service\NormalUserRepsonsityService.cs" />
+    <Compile Remove="Service\NormalUserRoleRepsonsityService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Sky.Core\Sky.Core.csproj" />
+    <ProjectReference Include="..\Sky.Entity\Sky.Entity.csproj" />
+  </ItemGroup>
+
+</Project>
