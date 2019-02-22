@@ -18,7 +18,7 @@ namespace Sky.Core
     {
         protected HDBContext dbcontext;
         private DbSet<TEntity> _entities;
-        private readonly string configName = "SqlServerConnection";
+        private readonly string configName = "default";
 
         #region 原始部分
 
@@ -126,71 +126,15 @@ namespace Sky.Core
             return this.Entities.Find(id);
         }
 
-        public void Insert(TEntity model)
-        {
-            try
-            {
-                if (model == null)
-                {
-                    throw new ArgumentNullException("model");
-                }
-                else
-                {
-                    this.Entities.Add(model);
-                    this.dbcontext.SaveChanges();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-
-        public void Update(TEntity model)
-        {
-            try
-            {
-                //model为空，抛空异常
-                if (model == null)
-                {
-                    throw new ArgumentNullException("model");
-                }
-                else
-                {
-                    //直接保存了
-                    this.dbcontext.SaveChanges();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-
-        public void Delete(TEntity model)
-        {
-            try
-            {
-                if (model == null)
-                {
-                    throw new ArgumentNullException("entity");
-                }
-                this.Entities.Remove(model);
-                this.dbcontext.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
+      
 
         public dynamic FromSql(string sql)
-        {
+        {  
             return Entities.FromSql(sql);
         }
 
         public dynamic FromSql<T>(string sql, params object[] paramerts) where T : new()
-        {
+        { 
             return Entities.FromSql(sql, paramerts);
         }
 
@@ -198,10 +142,7 @@ namespace Sky.Core
         {
             return dbcontext.Database.ExecuteSqlCommand(sql);
         }
-
-
         
-
         #endregion
 
 

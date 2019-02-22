@@ -127,8 +127,7 @@ namespace Sky.Web.WebApi.Controllers
         /// </summary>
         /// <returns>分页获取</returns>
         public string GetUsersList()
-        {
-            
+        { 
             return "";
         }
 

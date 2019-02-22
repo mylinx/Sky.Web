@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using Sky.Entity;
 using Sky.RepsonsityService.IService;
 using Sky.Common;
+using Newtonsoft.Json;
+using Microsoft.EntityFrameworkCore;
 
 namespace Sky.Web.WebApi.Controllers
 {
@@ -20,11 +22,117 @@ namespace Sky.Web.WebApi.Controllers
     public class ConnetionDemoController : ControllerBase
     {
         protected ICacheService _cacheService;
-
-        public ConnetionDemoController(ICacheService cacheService)
+        protected IRolesRepsonsityService _rolesRepsonsityService;
+        public ConnetionDemoController(ICacheService cacheService,
+            IRolesRepsonsityService rolesRepsonsityService
+            )
         {
             _cacheService = cacheService;
+            _rolesRepsonsityService = rolesRepsonsityService;
         }
+
+        [Route("rolesinsert")]
+        [HttpGet]
+        public string RolesTest()
+        {
+            try
+            {
+                RolesEntity rolesEntity = new RolesEntity();
+                rolesEntity.ID = Guid.NewGuid().ToString();
+                rolesEntity.RolesName = "张三";
+                rolesEntity.UpdateDate = DateTime.Now.ToString();
+                _rolesRepsonsityService.Insert(rolesEntity);
+                _rolesRepsonsityService.SaveChange();
+            }
+            catch (Exception ex)
+            {
+                 
+            }
+           
+            return "成功";
+        }
+
+
+        [Route("rolesUpdate")]
+        [HttpGet]
+        public string RolesTest1()
+        {
+            try
+            {
+                RolesEntity rolesEntity = new RolesEntity();
+                rolesEntity.ID = "76d71a4d-daa1-4b9e-885a-be789579a4e5";
+                rolesEntity.RolesName = "李四";
+                rolesEntity.CreateDate = DateTime.Now.ToString();
+                _rolesRepsonsityService.Update(rolesEntity);
+                _rolesRepsonsityService.SaveChange();
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return "成功";
+        }
+
+
+        [Route("rolesDel")]
+        [HttpGet]
+        public string RolesTest1(string id)
+        {
+            try
+            {
+                RolesEntity rolesEntity = new RolesEntity();
+                _rolesRepsonsityService.Delete(id);
+                _rolesRepsonsityService.SaveChange();
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return "成功";
+        }
+
+
+
+
+        [Route("rolesGetByID")]
+        [HttpGet]
+        public string GetModel(string id)
+        {
+            try
+            {
+                RolesEntity rolesEntity = new RolesEntity();
+                rolesEntity= _rolesRepsonsityService.GetById(id);
+                return JsonConvert.SerializeObject(rolesEntity);
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return "成功";
+        }
+
+
+
+        [Route("rolesGetAll")]
+        [HttpGet]
+        public string GetAll()
+        {
+            try
+            {
+                IPagedList<RolesEntity> list = _rolesRepsonsityService.GetPagedList(null,null,null, 1, 20, false);
+                var list1 = _rolesRepsonsityService.FromSql<UserEntity>("select * from userentity");
+                return JsonConvert.SerializeObject(list);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return "成功";
+        }
+
 
 
         [Authorize]

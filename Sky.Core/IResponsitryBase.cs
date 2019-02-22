@@ -53,23 +53,23 @@ namespace Sky.Core
         /// <returns></returns>
         TEntity GetById(object id);
 
-        /// <summary>
-        /// 泛型方法--添加实体
-        /// </summary>
-        /// <param name="model"></param>
-        void Insert(TEntity model);
+        ///// <summary>
+        ///// 泛型方法--添加实体
+        ///// </summary>
+        ///// <param name="model"></param>
+        //void Insert(TEntity model);
 
-        /// <summary>
-        /// 泛型方法，更新实体
-        /// </summary>
-        /// <param name="model"></param>
-        void Update(TEntity model);
+        ///// <summary>
+        ///// 泛型方法，更新实体
+        ///// </summary>
+        ///// <param name="model"></param>
+        //void Update(TEntity model);
 
-        /// <summary>
-        /// 泛型方法--删除实体
-        /// </summary>
-        /// <param name="model"></param>
-        void Delete(TEntity model);
+        ///// <summary>
+        ///// 泛型方法--删除实体
+        ///// </summary>
+        ///// <param name="model"></param>
+        //void Delete(TEntity model);
 
 
         /// <summary>

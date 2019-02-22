@@ -7,6 +7,10 @@ using Microsoft.Extensions.Caching.Distributed;
 
 namespace Sky.Common
 {
+
+    /// <summary>
+    /// 缓存接口实现
+    /// </summary>
     public class MemoryCacheService : ICacheService
     {
         protected IMemoryCache _cache;
