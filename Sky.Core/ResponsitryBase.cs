@@ -127,22 +127,33 @@ namespace Sky.Core
         }
 
       
-
-        public dynamic FromSql(string sql)
-        {  
-            return Entities.FromSql(sql);
-        }
-
-        public dynamic FromSql<T>(string sql, params object[] paramerts) where T : new()
-        { 
-            return Entities.FromSql(sql, paramerts);
-        }
-
-        public int ExecuteSqlCommand(string sql)
+        /// <summary>
+        ///  查询
+        /// </summary>
+        /// <typeparam name="T">自定义类</typeparam>
+        /// <param name="sql">sql语句</param>
+        /// <returns></returns>
+        public dynamic FromSql<T>(string sql)  where T: class
         {
-            return dbcontext.Database.ExecuteSqlCommand(sql);
+            return dbcontext.Set<T>().FromSql(sql);
         }
+
         
+        /// <summary>
+        /// 查询
+        /// </summary>
+        /// <typeparam name="T">自定义类</typeparam>
+        /// <param name="sql">sql语句</param>
+        /// <param name="paramerts">参数</param>
+        /// <returns></returns>
+        public dynamic FromSql<T>(string sql, params DBParameter[] paramerts) where T : class
+        { 
+           return dbcontext.Set<T>().FromSql(sql, paramerts);
+        }
+
+
+ 
+
         #endregion
 
 
@@ -581,7 +592,6 @@ namespace Sky.Core
         public virtual void UpdateAsync(TEntity entity)
         {
             Entities.Update(entity);
-
         }
 
         /// <summary>
@@ -651,6 +661,7 @@ namespace Sky.Core
                 return Entities.Count(predicate)>=1? true : false;
             }
         }
+
 
         #endregion
 

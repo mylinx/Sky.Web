@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 using Sky.Entity;
 using Sky.RepsonsityService.IService;
+using Sky.Web.WebApi.PostViewModel;
 
 namespace Sky.Web.WebApi.Controllers
 {
@@ -64,9 +65,9 @@ namespace Sky.Web.WebApi.Controllers
             if (!string.IsNullOrEmpty(pageSize))
                 PageSize = Convert.ToInt32(pageSize);
 
-
+            
            IPagedList<UserEntity> userlist = _userRepsonsityService.GetPagedList(predicate, null, null, PageIndex, PageSize, false);
-
+            
             return JObject.FromObject(userlist);
         }
 
@@ -74,6 +75,14 @@ namespace Sky.Web.WebApi.Controllers
         [HttpGet("{id}", Name = "Get")]
         public string Get(int id)
         {
+            //var list = _userRepsonsityService.FromSql<Post_UserViewModel>("select UsersName as name, password  from userentity");
+            var ss = (from a in _userRepsonsityService.GetAllList()
+                      select new
+                      {
+                          a.UserName,
+                          a.PassWord
+                      }).AsQueryable().ToPagedList(3,10);
+            
             return "value";
         }
 

@@ -90,21 +90,21 @@ namespace Sky.Core
         /// </summary>
         /// <param name="sql"></param>
         /// <returns></returns>
-        dynamic FromSql(string sql);
+        dynamic FromSql<T>(string sql) where T: class ; 
 
         /// <summary>
         /// 返回实体集合
         /// </summary>
         /// <param name="sql"></param>
         /// <returns></returns>
-        dynamic FromSql<T>(string sql,params object [] paramters) where T : new();
+        dynamic FromSql<T>(string sql,params DBParameter[] paramters) where T : class;
 
-        /// <summary>
-        /// 针对于insert , update ,delete操作,即返回影响行数
-        /// </summary>
-        /// <param name="sql"></param>
-        /// <returns></returns>
-        int ExecuteSqlCommand(string sql);
+        ///// <summary>
+        ///// 针对于insert , update ,delete操作,即返回影响行数
+        ///// </summary>
+        ///// <param name="sql"></param>
+        ///// <returns></returns>
+        //int ExecuteSqlCommand(string sql);
 
 
         #region  补充部分
