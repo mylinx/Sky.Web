@@ -17,11 +17,27 @@ namespace Sky.Web.WebApi.Controllers
     public class UsersController : ControllerBase
     {
         IUserRepsonsityService _userRepsonsityService;
-        public UsersController(IUserRepsonsityService userRepsonsityService)
+        IRolesperssionRepsonsityService _rolesperssionRepsonsityService;
+        IPerssionRepsonsityService _perssionRepsonsityService;
+        public UsersController(
+            IUserRepsonsityService userRepsonsityService,
+            IRolesperssionRepsonsityService rolesperssionRepsonsityService,
+            IPerssionRepsonsityService perssionRepsonsityService 
+            )
         {
             _userRepsonsityService = userRepsonsityService;
+            _rolesperssionRepsonsityService = rolesperssionRepsonsityService;
+            _perssionRepsonsityService = perssionRepsonsityService;
         }
 
+        [Route("GetPerAll")]
+        [HttpGet]
+        public string GetUserPersion()
+        { 
+            var ss = _perssionRepsonsityService.GetAll();
+
+            return "成功!";
+        }
 
 
         /// <summary>
