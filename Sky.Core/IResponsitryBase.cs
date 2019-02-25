@@ -53,6 +53,13 @@ namespace Sky.Core
         /// <returns></returns>
         TEntity GetById(object id);
 
+        /// <summary>
+        /// 更新指定字段内容
+        /// </summary>
+        /// <param name="entities">实体</param>
+        /// <param name="updatedProperties">指定的字段,注意:不能加入主键</param>
+        /// <returns></returns>
+        int Update(TEntity entities, params Expression<Func<TEntity, object>>[] updatedProperties);
         ///// <summary>
         ///// 泛型方法--添加实体
         ///// </summary>

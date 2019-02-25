@@ -151,8 +151,37 @@ namespace Sky.Core
            return dbcontext.Set<T>().FromSql(sql, paramerts);
         }
 
+        /// <summary>
+        /// Updates the specified entities.
+        /// </summary>
+        /// <param name="entities">The entities.</param>
+        public int Update(TEntity entities, params Expression<Func<TEntity, object>>[] updatedProperties )
+        {
 
- 
+            var dbEntityEntry = dbcontext.Entry(entities);
+            if (updatedProperties.Any())
+            {
+                foreach (var property in updatedProperties)
+                {
+                    dbEntityEntry.Property(property).IsModified = true;
+                }
+            }
+            else
+            {
+                foreach (var property in dbEntityEntry.OriginalValues.Properties)
+                {
+                    var original = dbEntityEntry.OriginalValues.GetValue<object>(property);
+                    var current = dbEntityEntry.CurrentValues.GetValue<object>(property);
+                    if (original != null && !original.Equals(current))
+                    {
+                        dbEntityEntry.Property(property.Name).IsModified = true;
+                    }
+                }
+            }
+            return dbcontext.SaveChanges();
+        }
+
+
 
         #endregion
 
@@ -593,6 +622,9 @@ namespace Sky.Core
         {
             Entities.Update(entity);
         }
+
+
+      
 
         /// <summary>
         /// Updates the specified entities.
