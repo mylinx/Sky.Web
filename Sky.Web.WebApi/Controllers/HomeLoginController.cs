@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Linq.Expressions;
+using Sky.Web.WebApi.Jwt;
 
 namespace Sky.Web.WebApi.Controllers
 {
@@ -30,12 +31,16 @@ namespace Sky.Web.WebApi.Controllers
     public class HomeLoginController : ControllerBase
     {
         IUserRepsonsityService _userRepsonsityService;
+        IJwtAuthorization _jwtAuthorization;
         /// <summary>
         /// 登陆验证
         /// </summary>
-        public HomeLoginController(IUserRepsonsityService userRepsonsityService)
+        public HomeLoginController(IUserRepsonsityService userRepsonsityService,
+            IJwtAuthorization jwtAuthorization
+            )
         {
             _userRepsonsityService = userRepsonsityService;
+            _jwtAuthorization = jwtAuthorization;
         }
 
         [Authorize]
@@ -43,8 +48,8 @@ namespace Sky.Web.WebApi.Controllers
         [HttpGet]
         public string GetValue()
         {
-            var sss=   this.HttpContext.Request.Headers["Authorization"];
-            JwtSecurityToken aaa= new JwtSecurityTokenHandler().ReadJwtToken(sss);
+            var sss = _jwtAuthorization.GetCurrentToken() ;
+            JwtSecurityToken aaa= new JwtSecurityTokenHandler().ReadJwtToken(sss.Split(" ").Last());
 
             return "value1";
         }

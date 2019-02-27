@@ -55,6 +55,41 @@ namespace Sky.Common
                 signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(ConfigHelper.GetSectionValue("JwtSecurityKey"))), SecurityAlgorithms.HmacSha256));
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
             return encodedJwt;
-        } 
+        }
+
+
+
+        /// <summary>
+        /// 创建jwtToken,采用微软内部方法，默认使用HS256加密，如果需要其他加密方式，请更改源码
+        /// 返回的结果和CreateToken一样
+        /// </summary>
+        /// <param name="payLoad"></param>
+        /// <param name="expiresMinute">有效分钟</param>
+        /// <returns></returns>
+        public static ClaimsPrincipal GetClaimsPrinctpal(string  token)
+        {
+            try
+            {
+                var tokenHandler = new JwtSecurityTokenHandler(); // 创建一个JwtSecurityTokenHandler类，用来后续操作
+                var jwtToken = tokenHandler.ReadToken(token) as JwtSecurityToken; // 将字符串token解码成token对象
+                if (jwtToken == null)
+                    return null;
+                var validationParameters = new TokenValidationParameters() // 生成验证token的参数
+                {
+                    RequireExpirationTime = true, // token是否包含有效期
+                    ValidateIssuer = false, // 验证秘钥发行人，如果要验证在这里指定发行人字符串即可
+                    ValidateAudience = false, // 验证秘钥的接受人，如果要验证在这里提供接收人字符串即可
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(ConfigHelper.GetSectionValue("JwtSecurityKey"))) // 生成token时的安全秘钥
+                };
+                SecurityToken securityToken; // 接受解码后的token对象
+                var principal = tokenHandler.ValidateToken(token, validationParameters, out securityToken);
+                return principal; // 返回秘钥的主体对象，包含秘钥的所有相关信息
+            }
+
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
     }
 }

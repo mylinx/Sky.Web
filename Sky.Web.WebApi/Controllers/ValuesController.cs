@@ -14,6 +14,9 @@ using Sky.Web.WebApi.ViewModel;
 using System.Reflection.Metadata;
 using System.Data.SqlClient;
 using System.Data;
+using Sky.Common;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Sky.Web.WebApi.Controllers
 {
@@ -21,6 +24,35 @@ namespace Sky.Web.WebApi.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        ICacheService _cacheRedis;
+        ICacheService _cacheMemory;
+        public ValuesController(IServiceProvider cacheService)
+        {
+            _cacheRedis = cacheService.GetService<RedisCacheService>();
+            _cacheMemory = cacheService.GetService<MemoryCacheService>();
+            //_cacheMemory = cacheService.First();
+            //_cacheRedis = cacheService.Skip(1).First();
+        }
+
+
+        [Route("Test1")]
+        [HttpGet]
+        public string Test1()
+        {
+            _cacheRedis.Add("a","张三");
+            _cacheMemory.Add("b", "李四");
+            return "成功!";
+        }
+
+        [Route("Test2")]
+        [HttpGet]
+        public string Test2()
+        {
+            string sss = "";
+            sss = _cacheRedis.GetValue("a");
+            sss += _cacheMemory.GetValue("b"); 
+            return sss;
+        }
         //INormalUserRepsonsityService _normalUser;
         //IUserRepsonsityService _userrespongy;
         //INormalRoleRepsonsityService _normalRoleRepsonsity;

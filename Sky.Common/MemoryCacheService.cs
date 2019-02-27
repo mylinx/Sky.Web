@@ -6,147 +6,65 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Caching.Distributed;
 
 namespace Sky.Common
-{
-
+{ 
     /// <summary>
     /// 缓存接口实现
     /// </summary>
     public class MemoryCacheService : ICacheService
     {
         protected IMemoryCache _cache;
-      
+
         public MemoryCacheService(IMemoryCache cache)
         {
             _cache = cache;
         }
-
-
-        public bool Add(string key, object value)
+         
+        public bool Add(string key, object value, int ExpirtionTime = 20)
         {
-            if (string.IsNullOrEmpty(key))
+            if (!string.IsNullOrEmpty(key))
             {
-                throw new ArgumentNullException();
+                _cache.Set(key, value , DateTimeOffset.Now.AddMinutes(ExpirtionTime));
             }
-
-            if (value==null)
-            {
-                throw new ArgumentNullException();
-            }
-            if (!Exists(key))
-            {
-                _cache.Set(key, value);
-            }
-            return Exists(key);
-        }
-
-        public bool Add(string key, object value, TimeSpan expiresSliding, TimeSpan expiressAbsoulte)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Add(string key, object value, TimeSpan expiresIn, bool isSliding = false)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> AddAsync(string key, object value)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> AddAsync(string key, object value, TimeSpan expiresSliding, TimeSpan expiressAbsoulte)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> AddAsync(string key, object value, TimeSpan expiresIn, bool isSliding = false)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Exists(string key)
-        {
-            if (string.IsNullOrEmpty(key))
-            {
-                throw new ArgumentNullException();
-            }
-            object cache;
-            return _cache.TryGetValue(key, out cache);
-        }
-
-        public async Task<bool> ExistsAsync(string key)
-        {
-            if (string.IsNullOrEmpty(key))
-            {
-                throw new ArgumentNullException();
-            }
-            object cache;
-            bool flt = false;
-            await Task.Run(() =>
-            {
-                flt = _cache.TryGetValue(key, out cache);
-            });
-            return flt;
-        }
-
-        public T Get<T>(string key) where T : class
-        {
-            throw new NotImplementedException();
-        }
-
-        public object Get(string key)
-        {
-            if (string.IsNullOrEmpty(key))
-            {
-                throw new ArgumentNullException();
-            }
-
-            return _cache.Get(key);
-        }
-
-        public IDictionary<string, object> GetAll(IEnumerable<string> keys)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IDictionary<string, object>> GetAllAsync(IEnumerable<string> keys)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<T> GetAsync<T>(string key) where T : class
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<object> GetAsync(string key)
-        {
-            throw new NotImplementedException();
+            return true;
         }
 
         public bool Remove(string key)
         {
             if (string.IsNullOrEmpty(key))
             {
-                throw new ArgumentNullException();
+                return false;
             }
-            _cache.Remove(key);
-            return true;
+            if (Exists(key))
+            {
+                _cache.Remove(key);
+                return true;
+            }
+            return false;
         }
-
-        public void RemoveAll(IEnumerable<string> keys)
+         
+        public string GetValue(string key)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(key))
+            {
+                return null;
+            }
+            if (Exists(key))
+            {
+                return _cache.Get(key).ToString();
+            }
+            return null;
         }
-
-        public Task RemoveAllAsync(IEnumerable<string> keys)
+         
+        public bool Exists(string key)
         {
-            throw new NotImplementedException();
-        }
+            if (string.IsNullOrEmpty(key))
+            {
+                return false;
+            }
 
-        public Task<bool> RemoveAsync(string key)
-        {
-            throw new NotImplementedException();
+            object cache;
+            return _cache.TryGetValue(key, out cache);
         }
+         
     }
 }

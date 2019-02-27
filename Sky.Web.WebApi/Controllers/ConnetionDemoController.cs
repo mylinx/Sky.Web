@@ -153,7 +153,7 @@ namespace Sky.Web.WebApi.Controllers
             //Console.Write(_cacheService.Get("a"));
             //Console.Write(_cacheService.Get("b"));
 
-            return _cacheService.Get("a");
+            return _cacheService.GetValue("a");
         }
 
 
@@ -167,7 +167,7 @@ namespace Sky.Web.WebApi.Controllers
             //Console.Write(_cacheService.Get("a"));
             //Console.Write(_cacheService.Get("b"));
 
-            return _cacheService.Get(id);
+            return _cacheService.GetValue(id);
         }
 
 
@@ -181,7 +181,7 @@ namespace Sky.Web.WebApi.Controllers
             //Console.Write(_cacheService.Get("a"));
             //Console.Write(_cacheService.Get("b"));
             _cacheService.Remove(id);
-            return _cacheService.Get(id);
+            return _cacheService.GetValue(id);
         }
     }
 }

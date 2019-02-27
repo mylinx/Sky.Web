@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -20,6 +21,8 @@ using Sky.Common;
 using Sky.Core;
 using Sky.RepsonsityService;
 using Sky.Web.WebApi.Controllers;
+using Sky.Web.WebApi.Jwt;
+using Microsoft.Extensions.Caching.Redis;
 
 namespace Sky.Web.WebApi
 {
@@ -35,7 +38,6 @@ namespace Sky.Web.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddDbContext<HDBContext>(option => option.UseSqlServer(Configuration.GetConnectionString("SqlServerConnection")));
             services.AddTransient(typeof(IResponsitryBase<>), typeof(ResponsitryBase<>));
 
             //集中注册服务
@@ -46,16 +48,27 @@ namespace Sky.Web.WebApi
                     services.AddScoped(typeArray, item.Key);
                 }
             }
-            services.AddTransient<ICacheService,MemoryCacheService>();
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();//注入httpcontext
+            services.AddTransient<IJwtAuthorization, JwtAuthorzation>(); //jwt认证注入
+
+
+            services.AddTransient<MemoryCacheService>(); //内存缓存认证注入 
+            //注入Redis
+            services.AddSingleton(new RedisCacheService(new RedisCacheOptions()
+            {
+                InstanceName = Configuration.GetSection("Redis:InstanceName").Value,
+                Configuration = Configuration.GetSection("Redis:Connection").Value
+            }));
+
             // 配置日志
             services.AddLogging(logConfig =>
             {
                 Logger.LoadLogger();
             });
-
-
-            services.AddCors();
             
+            services.AddCors();//支持跨域
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).
                 AddJwtBearer(jwbearoption =>
            {
@@ -70,8 +83,8 @@ namespace Sky.Web.WebApi
                    ValidAudience = "audience",
                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtSecurityKey"]))
 
-                };
-                //jwbearoption.SecurityTokenValidators.Clear();//将SecurityTokenValidators清除掉，否则它会在里面拿验证
+               };
+               //jwbearoption.SecurityTokenValidators.Clear();//将SecurityTokenValidators清除掉，否则它会在里面拿验证
            });
 
             services.AddMvc(option =>
