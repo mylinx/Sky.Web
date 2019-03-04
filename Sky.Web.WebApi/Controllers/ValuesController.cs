@@ -30,8 +30,6 @@ namespace Sky.Web.WebApi.Controllers
         {
             _cacheRedis = cacheService.GetService<RedisCacheService>();
             _cacheMemory = cacheService.GetService<MemoryCacheService>();
-            //_cacheMemory = cacheService.First();
-            //_cacheRedis = cacheService.Skip(1).First();
         }
 
 
