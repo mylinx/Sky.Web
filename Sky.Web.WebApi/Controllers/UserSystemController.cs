@@ -36,7 +36,7 @@ namespace Sky.Web.WebApi.Controllers
                     _userRepsonsityService.Delete(id.Trim());
 
                     result.verifiaction = true;
-                    result.message = "写入成功!";
+                    result.message = "删除成功!";
                 }
                 else
                 {
