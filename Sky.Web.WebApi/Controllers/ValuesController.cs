@@ -17,6 +17,8 @@ using System.Data;
 using Sky.Common;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
+using Sky.Web.WebApi.Jwt;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Sky.Web.WebApi.Controllers
 {
@@ -26,10 +28,13 @@ namespace Sky.Web.WebApi.Controllers
     {
         ICacheService _cacheRedis;
         ICacheService _cacheMemory;
-        public ValuesController(IServiceProvider cacheService)
+        IJwtAuthorization _jwtAuthorization;
+        public ValuesController(IServiceProvider cacheService,
+            IJwtAuthorization jwtAuthorization)
         {
             _cacheRedis = cacheService.GetService<RedisCacheService>();
             _cacheMemory = cacheService.GetService<MemoryCacheService>();
+            _jwtAuthorization = jwtAuthorization;
         }
 
 
@@ -42,14 +47,13 @@ namespace Sky.Web.WebApi.Controllers
             return "成功!";
         }
 
+        
+        [Authorize]
         [Route("Test2")]
         [HttpGet]
         public string Test2()
-        {
-            string sss = "";
-            sss = _cacheRedis.GetValue("a");
-            sss += _cacheMemory.GetValue("b"); 
-            return sss;
+        { 
+            return _jwtAuthorization.GetCurrentToken();
         }
         //INormalUserRepsonsityService _normalUser;
         //IUserRepsonsityService _userrespongy;

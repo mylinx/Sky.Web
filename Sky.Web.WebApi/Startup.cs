@@ -105,10 +105,15 @@ namespace Sky.Web.WebApi
             {
                 app.UseHsts();
             }
+            app.Run(async context =>
+            {
+                await context.Response.WriteAsync("Hello, World!");
+            });
+
 
             //强制使用https
             app.UseHttpsRedirection();
-
+            app.UseCors();
 
             //配置中间件
             app.UseAuthentication();

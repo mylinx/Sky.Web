@@ -18,7 +18,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Linq.Expressions;
-using Sky.Web.WebApi.Jwt;
+using Sky.Web.WebApi.Jwt; 
 
 namespace Sky.Web.WebApi.Controllers
 {
@@ -42,15 +42,18 @@ namespace Sky.Web.WebApi.Controllers
             _userRepsonsityService = userRepsonsityService;
             _jwtAuthorization = jwtAuthorization;
         }
-
-        [Authorize]
+       
         [Route("getvalue")]
         [HttpGet]
         public string GetValue()
         {
             var sss = _jwtAuthorization.GetCurrentToken() ;
             JwtSecurityToken aaa= new JwtSecurityTokenHandler().ReadJwtToken(sss.Split(" ").Last());
-
+            string a = aaa.Payload["ID"].ToString();
+            foreach (var item in aaa.Claims)
+            {
+                string ss = item.Value;
+            } 
             return "value1";
         }
 

@@ -6,18 +6,27 @@ using System.Threading.Tasks;
 using Sky.Entity;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc; 
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Sky.Web.WebApi.Jwt
 {
     public class JwtAuthorzation : IJwtAuthorization
     {
         IHttpContextAccessor _httpcontext;
-        public JwtAuthorzation(IHttpContextAccessor httpcontext)
+        ICacheService _cacheService;
+        public JwtAuthorzation(IHttpContextAccessor httpcontext, IServiceProvider cacheService)
         {
-            _httpcontext = httpcontext; 
+            _httpcontext = httpcontext;
+            _cacheService = cacheService.GetService<RedisCacheService>();
         }
 
+
+        /// <summary>
+        /// 创建Token值
+        /// </summary>
+        /// <param name="entity">实体</param>
+        /// <returns>返回token 数据</returns>
         public dynamic CreateToken(UserEntity entity)
         {
             DateTime expirteTime= DateTime.UtcNow.AddMinutes(Convert.ToDouble(ConfigHelper.GetSectionValue("expiresAt")));
@@ -41,13 +50,32 @@ namespace Sky.Web.WebApi.Jwt
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        public Task<string> UpdateToken(string token)
+        public dynamic UpdateToken(string token)
         {
-            
-            throw new NotImplementedException();
+            JwtSecurityToken readtoken = new JwtSecurityTokenHandler().ReadJwtToken(token);
+            //加入黑名单
+            if (!_cacheService.Exists(readtoken.Payload["ID"].ToString()) )
+            {
+                _cacheService.Add(readtoken.Payload["ID"].ToString(), token);
+            }
+
+            DateTime expirteTime = DateTime.UtcNow.AddMinutes(Convert.ToDouble(ConfigHelper.GetSectionValue("expiresAt")));
+            Dictionary<string, object> payload = new Dictionary<string, object>();
+            payload.Add("ID", readtoken.Payload["ID"]);
+            payload.Add("UserName", readtoken.Payload["UserName"]);
+            payload.Add("Email", readtoken.Payload["Email"]);
+
+            var tokenacces = new
+            {
+                UserId = readtoken.Payload["ID"],
+                AccessToken = Encrypts.CreateToken(payload, Convert.ToInt32(ConfigHelper.GetSectionValue("expiresAt"))),
+                Expires = new DateTimeOffset(expirteTime).ToUnixTimeSeconds(),
+                Success = true
+            };
+            return tokenacces;
         }
 
-        /// <summary>
+        /// <summary>   
         /// 停用token
         /// </summary>
         /// <param name="token"></param>
@@ -70,7 +98,10 @@ namespace Sky.Web.WebApi.Jwt
             throw new NotImplementedException();
         }
 
-
+        /// <summary>
+        /// 获取当前token 
+        /// </summary>
+        /// <returns></returns>
         public string GetCurrentToken()
         {
             var token = _httpcontext.HttpContext.Request.Headers["Authorization"];

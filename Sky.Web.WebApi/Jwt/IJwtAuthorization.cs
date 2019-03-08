@@ -25,7 +25,7 @@ namespace Sky.Web.WebApi.Jwt
         /// 刷新token值
         /// </summary>
         /// <returns></returns>
-        Task<string> UpdateToken(string  token);
+        dynamic UpdateToken(string  token);
 
         /// <summary>
         /// 判断是否有效
