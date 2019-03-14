@@ -12,44 +12,32 @@ using Sky.Entity;
 using Sky.RepsonsityService.IService;
 using Sky.Web.WebApi.ReturnViewModel;
 
-namespace Sky.Web.WebApi.Controllers
+namespace Sky.Web.WebApi.Controllers.RolesContrllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserSystemController : ControllerBase
+    public class RoleController : ControllerBase
     {
-        IUserRepsonsityService _userRepsonsityService;
-        public UserSystemController(IUserRepsonsityService userRepsonsityService)
+        readonly IRolesRepsonsityService _rolesRepsonsityService;
+        public RoleController(IRolesRepsonsityService rolesRepsonsityService)
         {
-            _userRepsonsityService = userRepsonsityService;
+            _rolesRepsonsityService = rolesRepsonsityService;
         }
-         
 
-        /// <summary>
-        /// 获取用户信息
-        /// </summary>
-        /// <param name="userName"></param>
-        /// <param name="rolesID"></param>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageSize"></param>
-        /// <returns></returns>
-        [Route("GetUserList")]
+        [Route("GetRoleList")]
         [HttpGet]
-        public async Task<JObject> GetUserList(string userName,string rolesID,string pageIndex,string pageSize)
+        public async Task<JObject> GetRoleList(string name , string pageIndex, string pageSize)
         {
-            DataResult result = new DataResult() { verifiaction=false };
+            DataResult result = new DataResult() { verifiaction = false };
             try
             {
                 int _pageIndex = 1;
                 int _pageSize = 20;
-                Expression<Func<UserEntity, bool>> expression = null;
-                //if (!string.IsNullOrEmpty(userName))
-                if (!userName.IsEmpty())
-                    expression = exp => exp.UserName.Contains(userName.Trim());
+                Expression<Func<RolesEntity, bool>> expression = null;
 
-                if (!rolesID.IsEmpty())
-                    expression = exp => exp.RoleID == rolesID;
-
+                if (!name.IsEmpty())
+                    expression = exp => exp.RolesName.Contains(name.Trim());
+                 
                 if (!pageIndex.IsEmpty())
                 {
                     _pageIndex = pageIndex.ToInt();
@@ -60,7 +48,7 @@ namespace Sky.Web.WebApi.Controllers
                     _pageSize = pageSize.ToInt();
                 }
 
-                IPagedList<UserEntity> pagedList = await _userRepsonsityService.GetPagedListAsync(expression, null, null, _pageIndex, _pageSize);
+                IPagedList<RolesEntity> pagedList = await _rolesRepsonsityService.GetPagedListAsync(expression, null, null, _pageIndex, _pageSize);
 
                 result.verifiaction = true;
                 result.message = "获取成功!";
@@ -76,7 +64,10 @@ namespace Sky.Web.WebApi.Controllers
 
             }
             return JObject.FromObject(result);
+
+
         }
+
 
 
         /// <summary>
@@ -96,7 +87,7 @@ namespace Sky.Web.WebApi.Controllers
             {
                 if (!string.IsNullOrEmpty(id))
                 {
-                    _userRepsonsityService.Delete(id.Trim());
+                    _rolesRepsonsityService.Delete(id.Trim());
 
                     result.verifiaction = true;
                     result.message = "删除成功!";
@@ -116,16 +107,16 @@ namespace Sky.Web.WebApi.Controllers
             }
             return JObject.FromObject(result);
         }
-        
+
 
         /// <summary>
         /// 更新
         /// </summary>
         /// <param name="_userEntity"></param>
         /// <returns></returns>
-        [Route("updateUsers")]
+        [Route("updateRole")]
         [HttpPost]
-        public JObject Update([FromBody]UserEntity _userEntity)
+        public JObject Update([FromBody]RolesEntity _roleEntity)
         {
             DataResult result = new DataResult
             {
@@ -134,29 +125,34 @@ namespace Sky.Web.WebApi.Controllers
 
             try
             {
-                if (_userRepsonsityService.IsExists(x => x.UserName == _userEntity.UserName))
+                if (_rolesRepsonsityService.IsExists(x => x.RolesName == _roleEntity.RolesName))
                 {
-                    result.message = "修改失败,已存在该账号!";
+                    result.message = "因角色名称重复,修改失败!";
                     return JObject.FromObject(result);
                 }
 
-                UserEntity userEntity = new UserEntity
+                RolesEntity userEntity = new RolesEntity
                 {
-                    ID = _userEntity.ID,
-                    UserName = _userEntity.UserName,
-                    PassWord = Encrypts.EncryptPassword(_userEntity.PassWord), 
-                    Email = _userEntity.Email
+                    ID = _roleEntity.ID,
+                    RolesName = _roleEntity.RolesName,
+                    UpdateDate = _roleEntity.UpdateDate.ToString()
                 };
 
-                int a=  _userRepsonsityService.Update(userEntity, new Expression<Func<UserEntity, object>>[]
+                int a = _rolesRepsonsityService.Update(userEntity, new Expression<Func<RolesEntity, object>>[]
                 {
-                     m=>m.UserName,
-                     m=>m.PassWord,
-                     m=>m.Email
+                     m=>m.RolesName,
+                     m=>m.UpdateDate,
+                     m=>m.Remark
                 });
-
-                result.verifiaction = true;
-                result.message = "写入成功!";
+                if (a > 0)
+                {
+                    result.verifiaction = true;
+                    result.message = "更新成功";
+                }
+                else
+                {
+                    result.message = "修改失败,可能是数据不存在或已删除!";
+                }
             }
             catch (Exception ex)
             {
@@ -165,9 +161,7 @@ namespace Sky.Web.WebApi.Controllers
             finally
             {
 
-            }
-
-
+            } 
             return JObject.FromObject(result);
         }
 
@@ -178,8 +172,9 @@ namespace Sky.Web.WebApi.Controllers
         /// </summary>
         /// <param name="_userEntity"></param>
         /// <returns></returns>
+        [Route("AddRoles")]
         [HttpPost]
-        public JObject Register([FromBody]UserEntity _userEntity)
+        public JObject AddRolesInfo([FromBody]RolesEntity _userRoleEntity)
         {
             DataResult result = new DataResult()
             {
@@ -187,25 +182,21 @@ namespace Sky.Web.WebApi.Controllers
             };
             try
             {
-                if (_userRepsonsityService.IsExists(x => x.UserName == _userEntity.UserName))
+                if (_rolesRepsonsityService.IsExists(x => x.RolesName == _userRoleEntity.RolesName))
                 {
-                    result.message = "已存在该账号!";
+                    result.message = "角色名称已经存在!";
                     return JObject.FromObject(result);
                 }
 
-                UserEntity userEntity = new UserEntity
+
+                RolesEntity userRoleEntity = new RolesEntity
                 {
                     ID = Guid.NewGuid().ToString(),
-                    UserName = _userEntity.UserName,
-                    PassWord = Encrypts.EncryptPassword(_userEntity.PassWord),
-
-                    Email = _userEntity.Email,
-                    IsLock = 0,
-                    LoginLastDate = DateTime.Now.ToString(),
+                    RolesName = _userRoleEntity.RolesName,
                     CreateDate = DateTime.Now.ToString(),
-                    Remark = _userEntity.Remark
+                    Remark = _userRoleEntity.Remark
                 };
-                _userRepsonsityService.Insert(userEntity);
+                _rolesRepsonsityService.Insert(userRoleEntity);
 
                 result.verifiaction = true;
                 result.message = "写入成功!";

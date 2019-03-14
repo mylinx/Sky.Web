@@ -10,6 +10,7 @@ namespace Sky.Entity
     {
         [Key]
         public string ID { get; set; }
+        public string RoleID { get; set; }
         public string UserName { get; set; }
         public string PassWord { get; set; }
         public string Email { get; set; }

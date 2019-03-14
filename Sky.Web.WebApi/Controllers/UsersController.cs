@@ -50,13 +50,13 @@ namespace Sky.Web.WebApi.Controllers
         /// <returns></returns>
         [Route("GetUsers")]
         [HttpGet]
-        public JObject Get([FromBody]UserEntity userEntity, string pageIndex, string pageSize)
+        public JObject Get(  string pageIndex, string pageSize,string userName)
         {
             Expression<Func<UserEntity, bool>> predicate = null;
             int PageIndex = 1;
             int PageSize = 20;
-            if (!string.IsNullOrEmpty(userEntity.UserName))
-                predicate = pred => pred.UserName == userEntity.UserName;
+            if (!string.IsNullOrEmpty(userName))
+                predicate = pred => pred.UserName == userName.Trim();
 
             if (!string.IsNullOrEmpty(pageIndex))
                 PageIndex = Convert.ToInt32(pageIndex);

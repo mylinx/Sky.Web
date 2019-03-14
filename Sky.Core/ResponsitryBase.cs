@@ -272,11 +272,11 @@ namespace Sky.Core
 
             if (orderBy != null)
             {
-                return orderBy(query).ToPagedListAsync(pageIndex, pageSize, 0, cancellationToken);
+                return orderBy(query).ToPagedListAsync(pageIndex, pageSize, 1, cancellationToken);
             }
             else
             {
-                return query.ToPagedListAsync(pageIndex, pageSize, 0, cancellationToken);
+                return query.ToPagedListAsync(pageIndex, pageSize, 1, cancellationToken);
             }
         }
 
@@ -370,11 +370,11 @@ namespace Sky.Core
 
             if (orderBy != null)
             {
-                return orderBy(query).Select(selector).ToPagedListAsync(pageIndex, pageSize, 0, cancellationToken);
+                return orderBy(query).Select(selector).ToPagedListAsync(pageIndex, pageSize, 1, cancellationToken);
             }
             else
             {
-                return query.Select(selector).ToPagedListAsync(pageIndex, pageSize, 0, cancellationToken);
+                return query.Select(selector).ToPagedListAsync(pageIndex, pageSize, 1, cancellationToken);
             }
         }
 

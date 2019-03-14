@@ -35,9 +35,7 @@ namespace Sky.Web.WebApi.Filters
                 await HandleExceptionAsync(context, statusCode, ex.Message);
             }
             finally
-            {
-                
-
+            { 
                 await HandleExceptionAsync(context, statusCode, msg);
             } 
         }

@@ -62,8 +62,7 @@ namespace Sky.Common
                 return false;
             }
 
-            object cache;
-            return _cache.TryGetValue(key, out cache);
+            return _cache.TryGetValue(key, out object cache);
         }
          
     }

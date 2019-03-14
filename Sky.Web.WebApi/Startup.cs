@@ -90,7 +90,7 @@ namespace Sky.Web.WebApi
             services.AddMvc(option =>
             {
                 //全局配置错误日志
-                option.Filters.Add<HttpGlobalExceptionFilter>();
+                //option.Filters.Add<HttpGlobalExceptionFilter>();
             }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
@@ -105,10 +105,10 @@ namespace Sky.Web.WebApi
             {
                 app.UseHsts();
             }
-            app.Run(async context =>
-            {
-                await context.Response.WriteAsync("Hello, World!");
-            });
+            //app.Run(async context =>
+            //{
+            //    await context.Response.WriteAsync("Hello, World!");
+            //});
 
 
             //强制使用https

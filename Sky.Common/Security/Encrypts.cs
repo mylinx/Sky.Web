@@ -71,7 +71,7 @@ namespace Sky.Common
             try
             {
                 var tokenHandler = new JwtSecurityTokenHandler(); // 创建一个JwtSecurityTokenHandler类，用来后续操作
-                var jwtToken = tokenHandler.ReadToken(token) as JwtSecurityToken; // 将字符串token解码成token对象
+                JwtSecurityToken jwtToken = tokenHandler.ReadToken(token) as JwtSecurityToken; // 将字符串token解码成token对象
                 if (jwtToken == null)
                     return null;
                 var validationParameters = new TokenValidationParameters() // 生成验证token的参数
@@ -80,9 +80,8 @@ namespace Sky.Common
                     ValidateIssuer = false, // 验证秘钥发行人，如果要验证在这里指定发行人字符串即可
                     ValidateAudience = false, // 验证秘钥的接受人，如果要验证在这里提供接收人字符串即可
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(ConfigHelper.GetSectionValue("JwtSecurityKey"))) // 生成token时的安全秘钥
-                };
-                SecurityToken securityToken; // 接受解码后的token对象
-                var principal = tokenHandler.ValidateToken(token, validationParameters, out securityToken);
+                }; 
+                var principal = tokenHandler.ValidateToken(token, validationParameters, out SecurityToken securityToken);
                 return principal; // 返回秘钥的主体对象，包含秘钥的所有相关信息
             }
 
