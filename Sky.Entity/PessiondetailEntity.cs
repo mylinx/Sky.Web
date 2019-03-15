@@ -2,11 +2,12 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+ 
 namespace Sky.Entity
 {
-    [Table("roles")]
-    //roles
-    public class RolesEntity
+    [Table("pessiondetail")]
+    //pessiondetail
+    public class PessiondetailEntity
     {
 
         /// <summary>
@@ -17,7 +18,6 @@ namespace Sky.Entity
             get;
             set;
         }
-
         /// <summary>
         /// PerssionID
         /// </summary>
@@ -27,9 +27,17 @@ namespace Sky.Entity
             set;
         }
         /// <summary>
-        /// RolesName
+        /// BtName
         /// </summary>
-        public string RolesName
+        public string BtName
+        {
+            get;
+            set;
+        }
+        /// <summary>
+        /// IsEnable
+        /// </summary>
+        public bool IsEnable
         {
             get;
             set;
@@ -46,14 +54,6 @@ namespace Sky.Entity
         /// Remark
         /// </summary>
         public string Remark
-        {
-            get;
-            set;
-        }
-        /// <summary>
-        /// UpdateDate
-        /// </summary>
-        public string UpdateDate
         {
             get;
             set;

@@ -17,7 +17,7 @@ namespace Sky.Entity
       	/// <summary>
 		/// auto_increment
         /// </summary>
-        public  int ID
+        public string ID
         {
             get; 
             set; 
@@ -25,7 +25,7 @@ namespace Sky.Entity
 		/// <summary>
 		/// ParentID
         /// </summary>
-        public  int? ParentID
+        public string ParentID
         {
             get; 
             set; 
@@ -45,7 +45,16 @@ namespace Sky.Entity
         {
             get; 
             set; 
-        }        
+        } 
+        
+        /// <summary>
+		/// LinkUrl
+        /// </summary>
+        public  int IsEnable
+        {
+            get; 
+            set; 
+        }       
 		/// <summary>
 		/// CreateDate
         /// </summary>

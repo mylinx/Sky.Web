@@ -97,7 +97,7 @@ namespace Sky.Web.WebApi.Controllers
                 if (!string.IsNullOrEmpty(id))
                 {
                     _userRepsonsityService.Delete(id.Trim());
-
+                     
                     result.verifiaction = true;
                     result.message = "删除成功!";
                 }
