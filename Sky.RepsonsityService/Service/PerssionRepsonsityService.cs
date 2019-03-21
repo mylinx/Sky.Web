@@ -15,7 +15,7 @@ namespace Sky.RepsonsityService.Service
 { 
 	public class  PerssionRepsonsityService : ResponsitryBase< PerssionEntity>, IPerssionRepsonsityService
 	{
-	  	 public  PerssionRepsonsityService() :base("default", DBType.MySql)
+	  	 public  PerssionRepsonsityService() :base("MySqlConnection", DBType.MySql)
 	        {
 	
 	        }

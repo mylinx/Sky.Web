@@ -15,7 +15,7 @@ namespace Sky.RepsonsityService.Service
 
     public class RolesRepsonsityService : ResponsitryBase<RolesEntity>, IRolesRepsonsityService
     {
-        public RolesRepsonsityService() :base("default",DBType.MySql)
+        public RolesRepsonsityService() :base("MySqlConnection", DBType.MySql)
         {
 
         }

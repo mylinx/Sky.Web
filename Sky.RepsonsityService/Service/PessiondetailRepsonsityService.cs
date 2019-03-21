@@ -13,7 +13,7 @@ namespace Sky.RepsonsityService.Service
 
     public class PessiondetailRepsonsityService : ResponsitryBase<PessiondetailEntity>, IPessiondetailRepsonsityService
     {
-        public PessiondetailRepsonsityService() : base("MysqlConnetion", DBType.MySql)
+        public PessiondetailRepsonsityService() : base("MySqlConnection", DBType.MySql)
         {
 
         }

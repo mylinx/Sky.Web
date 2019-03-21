@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Sky.Web.WebApi.ReturnViewModel;
 using System.Linq.Expressions;
 using Sky.Web.WebApi.PostViewModel;
+using Newtonsoft.Json;
 
 namespace Sky.Web.WebApi.Controllers.PerssionControllers
 {
@@ -21,7 +22,7 @@ namespace Sky.Web.WebApi.Controllers.PerssionControllers
     public class PerssionController : ControllerBase
     {
         readonly IPerssionRepsonsityService _perssionRepsonsityService;
-        readonly IPessiondetailRepsonsityService _pessiondetailRepsonsityService;
+       // readonly IPessiondetailRepsonsityService _pessiondetailRepsonsityService;
         readonly ICacheService _cacheService;
         public PerssionController(IPerssionRepsonsityService perssionRepsonsityService,
             IServiceProvider serviceProvider,
@@ -29,7 +30,7 @@ namespace Sky.Web.WebApi.Controllers.PerssionControllers
         {
             _perssionRepsonsityService = perssionRepsonsityService;
             _cacheService = serviceProvider.GetService<MemoryCacheService>();
-            _pessiondetailRepsonsityService = pessiondetailRepsonsityService;
+           // _pessiondetailRepsonsityService = pessiondetailRepsonsityService;
         }
 
         /// <summary>
@@ -38,40 +39,87 @@ namespace Sky.Web.WebApi.Controllers.PerssionControllers
         /// <returns></returns>
         [Route("GetPersion")]
         [HttpGet]
-        public async Task<JObject> GetPessionList(string name)
+        public string GetPessionList(string name)
         {
-            Expression<Func<PerssionEntity,bool>> expression = null;
+           Expression<Func<PerssionEntity,bool>> expression = null;
             if (!name.IsEmpty())
             {
                 expression = exp => exp.Name == name;
              }
-            List<PerssionEntity> list = await _perssionRepsonsityService.GetAllListAsync();
-            IEnumerable<PerssionEntity> ilist = list.Where(x=>x.Name== name );
-            List<TreeViewModel> treeViewModel = new List<TreeViewModel>();
-            foreach (var item in list)
-            {
-                treeViewModel.AddRange(TreeList(item));
 
-            }
-            
-            return  JObject.FromObject(list);
+            //expression = exp => exp.ParentID == "0";
+
+            List<PerssionEntity> list =  _perssionRepsonsityService.GetAllList();
+
+            List<TreeChildViewModel> treeViewModels = new List<TreeChildViewModel>();
+            // AddChild(list);
+            treeViewModels= AddChildN("0");
+            return  JsonConvert.SerializeObject(treeViewModels);
         }
 
-
-        private List<TreeViewModel>  TreeList(PerssionEntity perssionlist)
+        private List<TreeChildViewModel>  AddChildN(string Pid)
         {
-            //List<TreeViewModel> treeViewModel = new List<TreeViewModel>();
-            //var data = _list.Where(t => t.ParentId == id);
-            //foreach (var tree in data)
-            //{
-            //    Console.WriteLine(tree.Name);
-            //    AddChildNode(tree.Id);
-            //}
-
-
-            return null; 
+            var data = _perssionRepsonsityService.GetAllList().Where(x => x.ParentID == Pid);
+            List<TreeChildViewModel> list = new List<TreeChildViewModel>();
+            foreach (var item in data)
+            { 
+                TreeChildViewModel childViewModel = new TreeChildViewModel();
+                childViewModel.id = item.ID;
+                childViewModel.component = item.Component;
+                childViewModel.name = item.Name;
+                childViewModel.meta_icon = item.Meta_icon;
+                childViewModel.meta_title = item.Meta_title;
+                childViewModel.meta_content = item.Meta_content; 
+                childViewModel.treeChildren = GetChildList(childViewModel);
+                list.Add(childViewModel);
+            } 
+            return list;
         }
 
+        public List<TreeChildViewModel> GetChildList(TreeChildViewModel treeChildView)
+        {
+            if (!_perssionRepsonsityService.IsExists(x => x.ParentID == treeChildView.id))
+            {
+                return null;
+            }
+            else
+            {
+              return   AddChildN(treeChildView.id);
+            }
+        }
+
+
+        private void AddChild(List<TreeChildViewModel> perssionlist,string Pid)
+        {
+            var data = _perssionRepsonsityService.GetAllList().Where(x => x.ParentID == Pid);
+            if (data.Count() == 0)
+                return;
+            foreach (var item in data)
+            {
+                if (!_perssionRepsonsityService.IsExists(x => x.ParentID == item.ID))
+                {
+                    TreeChildViewModel childViewModel = new TreeChildViewModel();
+                    childViewModel.id = item.ID;
+                    childViewModel.component = item.Component;
+                    childViewModel.name = item.Name;
+                    childViewModel.meta_icon = item.Meta_icon;
+                    childViewModel.meta_title = item.Meta_title;
+                    childViewModel.meta_content = item.Meta_content;
+                    perssionlist.Add(childViewModel);
+                }
+                else
+                {
+                    TreeChildViewModel childViewModel = new TreeChildViewModel();
+                    childViewModel.id = item.ID;
+                    childViewModel.component = item.Component;
+                    childViewModel.name = item.Name;
+                    childViewModel.meta_icon = item.Meta_icon;
+                    childViewModel.meta_title = item.Meta_title;
+                    childViewModel.meta_content = item.Meta_content;
+                    AddChild(perssionlist, item.ID);
+                } 
+            }
+        }
 
         /// <summary>
         /// 新增/更新权限
@@ -120,7 +168,7 @@ namespace Sky.Web.WebApi.Controllers.PerssionControllers
                         entity.PerssionID = perssionEntity.ID;
                         entity.BtName = str[i];
                         entity.CreateDate = DateTime.Now.ToString();
-                        await _pessiondetailRepsonsityService.InsertAsync(entity);
+                       // await _pessiondetailRepsonsityService.InsertAsync(entity);
                     }
                 }
                

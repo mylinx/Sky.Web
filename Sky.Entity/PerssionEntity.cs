@@ -41,16 +41,52 @@ namespace Sky.Entity
 		/// <summary>
 		/// LinkUrl
         /// </summary>
-        public  string LinkUrl
+        public  string PathRouter
         {
             get; 
             set; 
-        } 
-        
+        }
+
         /// <summary>
-		/// LinkUrl
+        /// Component
         /// </summary>
-        public  int IsEnable
+        public string Component
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Meta_title
+        /// </summary>
+        public string Meta_title
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Meta_icon
+        /// </summary>
+        public string Meta_icon
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Meta_content
+        /// </summary>
+        public string Meta_content
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// LinkUrl
+        /// </summary>
+        public int? IsEnable
         {
             get; 
             set; 
