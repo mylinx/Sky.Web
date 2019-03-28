@@ -23,6 +23,7 @@ using Sky.RepsonsityService;
 using Sky.Web.WebApi.Controllers;
 using Sky.Web.WebApi.Jwt;
 using Microsoft.Extensions.Caching.Redis;
+using Sky.Web.WebApi.Commons;
 
 namespace Sky.Web.WebApi
 {
@@ -105,22 +106,20 @@ namespace Sky.Web.WebApi
             {
                 app.UseHsts();
             }
-            //app.Run(async context =>
-            //{
-            //    await context.Response.WriteAsync("Hello, World!");
-            //});
 
 
             //强制使用https
             app.UseHttpsRedirection();
             app.UseCors();
 
+            //app.UseMiddleware<MyMiddle>();
+
+            //app.MMidel();
+
             //配置中间件
             app.UseAuthentication();
 
-            app.UseMvc();
-
-
+            app.UseMvc(); 
         }
     }
 }

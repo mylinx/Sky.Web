@@ -34,7 +34,7 @@ namespace Sky.RepsonsityService.Service
             {
                 Expression<Func<UserEntity, bool>> pression = null;
                 pression = pres => pres.UserName == username && pres.PassWord == Encrypts.EncryptPassword(password);
-                model = base.GetFirstOrDefault(pression, null, null, false);
+                model = this.GetFirstOrDefault(pression, null, null, false);
                 if (model != null)
                 { 
                     return model;
@@ -42,7 +42,7 @@ namespace Sky.RepsonsityService.Service
             }
             finally
             {
-
+                this.dbcontext.Dispose();
             }
             return null;
         }
@@ -68,7 +68,7 @@ namespace Sky.RepsonsityService.Service
             }
             finally
             {
-
+                this.dbcontext.Dispose();
             }
             return false;
         }
