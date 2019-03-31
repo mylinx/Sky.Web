@@ -7,9 +7,13 @@
 
   <ItemGroup>
     <Compile Remove="log\**" />
+    <Compile Remove="wwwroot\**" />
     <Content Remove="log\**" />
+    <Content Remove="wwwroot\**" />
     <EmbeddedResource Remove="log\**" />
+    <EmbeddedResource Remove="wwwroot\**" />
     <None Remove="log\**" />
+    <None Remove="wwwroot\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,14 +26,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="log4net" Version="2.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.1.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
   </ItemGroup>
 
   <ItemGroup>

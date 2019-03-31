@@ -28,6 +28,11 @@ namespace Sky.Web.WebApi.Commons
                 verifiaction = false,
                 message = "管道失效" + context.Request.Host.Value.ToString()
             };
+
+            //1.获取token 
+            //2.通过token获取用户信息和角色信息
+            //3.通过角色获取权限信息,进行路由匹对
+            //为了提高效率, 可以用redis或者cache进行数据获取
             long aa = 0;
             if (_cacheService.Exists(context.Request.Host.Value.ToString()))
             {

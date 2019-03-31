@@ -70,23 +70,23 @@ namespace Sky.Web.WebApi
             
             services.AddCors();//支持跨域
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).
-                AddJwtBearer(jwbearoption =>
-           {
-               jwbearoption.TokenValidationParameters = new TokenValidationParameters
-               {
+           // services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).
+           //     AddJwtBearer(jwbearoption =>
+           //{
+           //    jwbearoption.TokenValidationParameters = new TokenValidationParameters
+           //    {
 
-                   ValidateIssuer = true,
-                   ValidateAudience = true,
-                   ValidateLifetime = true,
-                   ValidateIssuerSigningKey = true,
-                   ValidIssuer = "issuer",
-                   ValidAudience = "audience",
-                   IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtSecurityKey"]))
+           //        ValidateIssuer = true,
+           //        ValidateAudience = true,
+           //        ValidateLifetime = true,
+           //        ValidateIssuerSigningKey = true,
+           //        ValidIssuer = "issuer",
+           //        ValidAudience = "audience",
+           //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtSecurityKey"]))
 
-               };
-               //jwbearoption.SecurityTokenValidators.Clear();//将SecurityTokenValidators清除掉，否则它会在里面拿验证
-           });
+           //    };
+           //    //jwbearoption.SecurityTokenValidators.Clear();//将SecurityTokenValidators清除掉，否则它会在里面拿验证
+           //});
 
             services.AddMvc(option =>
             {
