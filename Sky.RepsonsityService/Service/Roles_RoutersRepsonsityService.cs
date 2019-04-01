@@ -13,9 +13,9 @@ using System.Linq.Expressions;
 using System.Security.Claims;
 namespace Sky.RepsonsityService.Service
 { 
-	public class  PerssionRepsonsityService : ResponsitryBase<PerssionEntity>, IPerssionRepsonsityService
+	public class Roles_RoutersRepsonsityService : ResponsitryBase<Roles_routersEntity>, IRoles_RoutersRepsonsityService
 	{
-	  	 public  PerssionRepsonsityService() :base("MySqlConnection", DBType.MySql)
+	  	 public Roles_RoutersRepsonsityService() :base("MySqlConnection", DBType.MySql)
 	        {
 	
 	        }

@@ -12,12 +12,12 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Security.Claims;
 namespace Sky.RepsonsityService.Service
-{ 
-	public class  PerssionRepsonsityService : ResponsitryBase<PerssionEntity>, IPerssionRepsonsityService
-	{
-	  	 public  PerssionRepsonsityService() :base("MySqlConnection", DBType.MySql)
-	        {
-	
-	        }
-	}
+{
+    public class RoutersRepsonsityService : ResponsitryBase<RoutersEntity>, IRoutersRepsonsityService
+    {
+        public RoutersRepsonsityService() : base("MySqlConnection", DBType.MySql)
+        {
+
+        }
+    }
 }
