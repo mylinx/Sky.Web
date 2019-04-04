@@ -90,7 +90,18 @@ namespace Sky.Entity
         {
             get; 
             set; 
-        }       
+        }    
+        
+        /// <summary>
+        /// LinkUrl
+        /// </summary>
+        public int? Sorts
+        {
+            get; 
+            set; 
+        }    
+
+
 		/// <summary>
 		/// CreateDate
         /// </summary>

@@ -54,9 +54,10 @@ namespace Sky.Web.WebApi.Controllers.RoutersControllers
             treeViewModels = AddChildN("0");
             if (treeViewModels.Count > 0)
             {
-
+                result.verifiaction = true;
+                result.rows = treeViewModels.OrderBy(x=>x.Sorts);
             }
-            return JsonConvert.SerializeObject(treeViewModels);
+            return JsonConvert.SerializeObject(result);
         }
 
 
@@ -74,26 +75,39 @@ namespace Sky.Web.WebApi.Controllers.RoutersControllers
             List<Roles_routersEntity> roles_Routers = new List<Roles_routersEntity>();
 
             roles_Routers = _roles_RoutersRepsonsityService.GetAllList(x => x.RolesID == "76d71a4d-daa1-4b9e-885a-33123213213");
-
             foreach (var item in data)
             {
-                foreach (var router in roles_Routers)
-                {
-                    if (router.RoutersID == item.ID)
-                    {
-                        TreeChildViewModel childViewModel = new TreeChildViewModel();
-                        childViewModel.Id = item.ID;
-                        childViewModel.Component = item.Component;
-                        childViewModel.Name = item.Name;
-                        childViewModel.Meta_icon = item.Meta_icon;
-                        childViewModel.Meta_title = item.Meta_title;
-                        childViewModel.Meta_content = item.Meta_content;
-                        childViewModel.TreeChildren = GetChildList(childViewModel);
-                        list.Add(childViewModel);
-                        break;
-                    }
-                } 
+                TreeChildViewModel childViewModel = new TreeChildViewModel();
+                childViewModel.Id = item.ID;
+                childViewModel.PathRouter = item.PathRouter;
+                childViewModel.Component = item.Component;
+                childViewModel.Name = item.Name;
+                childViewModel.Meta_icon = item.Meta_icon;
+                childViewModel.Meta_title = item.Meta_title;
+                childViewModel.Meta_content = item.Meta_content;
+                childViewModel.Sorts = item.Sorts;
+                childViewModel.TreeChildren = GetChildList(childViewModel);
+                list.Add(childViewModel);
             }
+            //foreach (var item in data)
+            //{
+            //    foreach (var router in roles_Routers)
+            //    {
+            //        if (router.RoutersID == item.ID)
+            //        {
+            //            TreeChildViewModel childViewModel = new TreeChildViewModel();
+            //            childViewModel.Id = item.ID;
+            //            childViewModel.Component = item.Component;
+            //            childViewModel.Name = item.Name;
+            //            childViewModel.Meta_icon = item.Meta_icon;
+            //            childViewModel.Meta_title = item.Meta_title;
+            //            childViewModel.Meta_content = item.Meta_content;
+            //            childViewModel.TreeChildren = GetChildList(childViewModel);
+            //            list.Add(childViewModel);
+            //            break;
+            //        }
+            //    } 
+            //}
             return list;
         }
 
