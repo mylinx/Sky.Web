@@ -25,80 +25,22 @@ namespace Sky.Web.WebApi.Controllers.PerssionControllers
     public class PerssionController : ControllerBase
     {
         readonly IPerssionRepsonsityService _perssionRepsonsityService;
-       // readonly IPessiondetailRepsonsityService _pessiondetailRepsonsityService;
+        readonly IRoles_RoutersRepsonsityService _roles_RoutersRepsonsity;
+      
         readonly ICacheService _cacheService;
         public PerssionController(IPerssionRepsonsityService perssionRepsonsityService,
             IServiceProvider serviceProvider,
-            IPessiondetailRepsonsityService pessiondetailRepsonsityService)
+            IPessiondetailRepsonsityService pessiondetailRepsonsityService,
+             IRoles_RoutersRepsonsityService roles_RoutersRepsonsit
+           
+            )
         {
             _perssionRepsonsityService = perssionRepsonsityService;
             _cacheService = serviceProvider.GetService<MemoryCacheService>();
-           // _pessiondetailRepsonsityService = pessiondetailRepsonsityService;
+            _roles_RoutersRepsonsity = roles_RoutersRepsonsit;
         }
 
-        /// <summary>
-        /// 获取权限列表
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        public string GetPessionList(string name)
-        {
-            Expression<Func<PerssionEntity,bool>> expression = null;
-            if (!name.IsEmpty())
-            {
-                expression = exp => exp.Name == name;
-             }
-            expression = exp => exp.ParentID == "0";
-            List<PerssionEntity> list =  _perssionRepsonsityService.GetAllList(expression);
-            List<TreeChildViewModel> treeViewModels = new List<TreeChildViewModel>(); 
-            treeViewModels= AddChildN("0");
-            return  JsonConvert.SerializeObject(treeViewModels);
-        }
-
-
-        /// <summary>
-        /// 父级菜单
-        /// </summary>
-        /// <param name="Pid"></param>
-        /// <returns></returns>
-        private List<TreeChildViewModel>  AddChildN(string Pid)
-        {
-            var data = _perssionRepsonsityService.GetAllList().Where(x => x.ParentID == Pid);
-            List<TreeChildViewModel> list = new List<TreeChildViewModel>();
-            foreach (var item in data)
-            { 
-                TreeChildViewModel childViewModel = new TreeChildViewModel();
-                childViewModel.id = item.ID;
-                childViewModel.component = item.Component;
-                childViewModel.name = item.Name;
-                childViewModel.meta_icon = item.Meta_icon;
-                childViewModel.meta_title = item.Meta_title;
-                childViewModel.meta_content = item.Meta_content; 
-                childViewModel.treeChildren = GetChildList(childViewModel);
-                list.Add(childViewModel);
-            } 
-            return list;
-        }
-
-
-        /// <summary>
-        /// 子集菜单
-        /// </summary>
-        /// <param name="treeChildView"></param>
-        /// <returns></returns>
-        public List<TreeChildViewModel> GetChildList(TreeChildViewModel treeChildView)
-        {
-            if (!_perssionRepsonsityService.IsExists(x => x.ParentID == treeChildView.id))
-            {
-                return null;
-            }
-            else
-            {
-              return   AddChildN(treeChildView.id);
-            }
-        }
-
-
+       
  
 
         /// <summary>

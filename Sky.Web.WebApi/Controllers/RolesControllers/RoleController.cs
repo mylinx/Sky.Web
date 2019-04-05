@@ -23,7 +23,14 @@ namespace Sky.Web.WebApi.Controllers.RolesContrllers
         {
             _rolesRepsonsityService = rolesRepsonsityService;
         }
-
+        
+        /// <summary>
+        /// 获取角色
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
         [Route("GetRoleList")]
         [HttpGet]
         public async Task<JObject> GetRoleList(string name , string pageIndex, string pageSize)
@@ -71,11 +78,11 @@ namespace Sky.Web.WebApi.Controllers.RolesContrllers
 
 
         /// <summary>
-        /// 删除用户
+        /// 删除角色
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [Route("deleteUser")]
+        [Route("deleteRole")]
         [HttpDelete]
         public JObject Del(string id)
         {
@@ -110,7 +117,7 @@ namespace Sky.Web.WebApi.Controllers.RolesContrllers
 
 
         /// <summary>
-        /// 更新
+        /// 更新角色
         /// </summary>
         /// <param name="_userEntity"></param>
         /// <returns></returns>
@@ -168,7 +175,7 @@ namespace Sky.Web.WebApi.Controllers.RolesContrllers
 
 
         /// <summary>
-        /// 新增账号
+        /// 新增角色
         /// </summary>
         /// <param name="_userEntity"></param>
         /// <returns></returns>
