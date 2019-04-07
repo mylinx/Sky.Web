@@ -9,6 +9,7 @@ namespace Sky.Web.WebApi.PostViewModel
     public class TreeChildViewModel
     {
         public string Id { get; set; }
+        public string PId { get; set; }
         public string PathRouter { get; set; }
         public string Name { get; set; }
         public string Component { get; set; }

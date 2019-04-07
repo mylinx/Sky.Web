@@ -79,6 +79,7 @@ namespace Sky.Web.WebApi.Controllers.RoutersControllers
             {
                 TreeChildViewModel childViewModel = new TreeChildViewModel();
                 childViewModel.Id = item.ID;
+                childViewModel.PId = item.ParentID;
                 childViewModel.PathRouter = item.PathRouter;
                 childViewModel.Component = item.Component;
                 childViewModel.Name = item.Name;
