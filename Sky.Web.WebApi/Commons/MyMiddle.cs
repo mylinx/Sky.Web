@@ -7,17 +7,30 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Sky.Common;
 using Microsoft.Extensions.DependencyInjection;
+using Sky.Web.WebApi.Jwt;
+using Newtonsoft.Json.Linq;
+using log4net;
+using Sky.Common.Emuns;
 
 namespace Sky.Web.WebApi.Commons
 {
+
+    /// <summary>
+    /// 中间件拦截token失效
+    /// </summary>
     public class MyMiddle
     {
         private readonly RequestDelegate _next;
         private readonly ICacheService _cacheService;
-        public MyMiddle(RequestDelegate next, IServiceProvider cacheService)
+        private readonly IJwtAuthorization _jwtAuthorization;
+        public MyMiddle(RequestDelegate next,
+            IServiceProvider cacheService,
+            IJwtAuthorization jwtAuthorization
+            )
         {
             this._next = next;
-            this._cacheService = cacheService.GetService<RedisCacheService>();
+            this._cacheService = cacheService.GetService<MemoryCacheService>();
+            _jwtAuthorization = jwtAuthorization;
         }
 
 
@@ -29,24 +42,30 @@ namespace Sky.Web.WebApi.Commons
                 message = "管道失效" + context.Request.Host.Value.ToString()
             };
 
-            //1.获取token 
-            //2.通过token获取用户信息和角色信息
-            //3.通过角色获取权限信息,进行路由匹对
-            //为了提高效率, 可以用redis或者cache进行数据获取
-            long aa = 0;
-            if (_cacheService.Exists(context.Request.Host.Value.ToString()))
+            try
             {
-                string data = _cacheService.GetValue(context.Request.Host.Value.ToString());
-                aa = DateTime.Parse(data).Ticks - DateTime.Now.Ticks;
-
-
-                return context.Response.WriteAsync(aa+"aaaa"+ DateTime.UtcNow.ToString());
+                var token= _jwtAuthorization.GetCurrentToken();
+                if (token != null)
+                {
+                    if (!_cacheService.Exists(token.Payload["ID"].ToString()))
+                    {
+                        result.statecode = (int)HttpStateEmuns.Invalid;
+                        result.message = "token失效,请重新登录!";
+                        return context.Response.WriteAsync(JsonConvert.SerializeObject(result));
+                    }
+                    else
+                    {
+                        result.verifiaction = true;
+                    }
+                }
+                return _next(context);
             }
-            else
+            catch (Exception ex)
             {
-                _cacheService.Add(context.Request.Host.Value.ToString(),DateTime.Now);
-                 return  _next(context);
-            } 
+                result.statecode = (int)HttpStateEmuns.Danger;
+                result.message = "非法请求!";
+                return context.Response.WriteAsync(JsonConvert.SerializeObject(result));
+            }
         }
     }
 }

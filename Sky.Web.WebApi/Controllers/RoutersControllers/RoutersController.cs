@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 using Sky.Common;
 using Sky.Entity;
 using Sky.RepsonsityService.IService;
+using Sky.Web.WebApi.Jwt;
 using Sky.Web.WebApi.PostViewModel;
 using Sky.Web.WebApi.ReturnViewModel;
 using System;
@@ -16,18 +17,22 @@ using System.Threading.Tasks;
 namespace Sky.Web.WebApi.Controllers.RoutersControllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class RoutersController : ControllerBase
     {
         readonly IRoutersRepsonsityService _routersRepsonsity;
         readonly IRoles_RoutersRepsonsityService _roles_RoutersRepsonsityService;
+        readonly IJwtAuthorization _jwtAuthorization;
         public RoutersController(
               IRoutersRepsonsityService routersRepsonsity,
-              IRoles_RoutersRepsonsityService roles_RoutersRepsonsityService
+              IRoles_RoutersRepsonsityService roles_RoutersRepsonsityService,
+              IJwtAuthorization jwtAuthorization
             )
         {
             _routersRepsonsity = routersRepsonsity;
             _roles_RoutersRepsonsityService = roles_RoutersRepsonsityService;
+            _jwtAuthorization = jwtAuthorization;
         }
 
 
@@ -37,7 +42,7 @@ namespace Sky.Web.WebApi.Controllers.RoutersControllers
         /// <returns></returns>
         [Route("GetPersion")]
         [HttpGet]
-        public string GetRoutersList(string name)
+        public string GetRoutersList(string name,string rid)
         {
             DataResult result = new DataResult()
             {
@@ -51,6 +56,7 @@ namespace Sky.Web.WebApi.Controllers.RoutersControllers
             expression = exp => exp.ParentID == "0";
             List<RoutersEntity> list = _routersRepsonsity.GetAllList(expression);
             List<TreeChildViewModel> treeViewModels = new List<TreeChildViewModel>();
+             
             treeViewModels = AddChildN("0");
             if (treeViewModels.Count > 0)
             {
@@ -66,49 +72,54 @@ namespace Sky.Web.WebApi.Controllers.RoutersControllers
         /// </summary>
         /// <param name="Pid"></param>
         /// <returns></returns>
-        private List<TreeChildViewModel> AddChildN(string Pid)
+        private List<TreeChildViewModel> AddChildN(string pid)
         {
-            var data = _routersRepsonsity.GetAllList().Where(x => x.ParentID == Pid);
+            var data = _routersRepsonsity.GetAllList().Where(x => x.ParentID == pid).OrderBy(x=>x.Sorts);
             List<TreeChildViewModel> list = new List<TreeChildViewModel>();
 
 
             List<Roles_routersEntity> roles_Routers = new List<Roles_routersEntity>();
 
-            roles_Routers = _roles_RoutersRepsonsityService.GetAllList(x => x.RolesID == "76d71a4d-daa1-4b9e-885a-33123213213");
-            foreach (var item in data)
-            {
-                TreeChildViewModel childViewModel = new TreeChildViewModel();
-                childViewModel.Id = item.ID;
-                childViewModel.PId = item.ParentID;
-                childViewModel.PathRouter = item.PathRouter;
-                childViewModel.Component = item.Component;
-                childViewModel.Name = item.Name;
-                childViewModel.Meta_icon = item.Meta_icon;
-                childViewModel.Meta_title = item.Meta_title;
-                childViewModel.Meta_content = item.Meta_content;
-                childViewModel.Sorts = item.Sorts;
-                childViewModel.TreeChildren = GetChildList(childViewModel);
-                list.Add(childViewModel);
-            }
+            string ss = _jwtAuthorization.GetField("RolesID");
+
+            roles_Routers = _roles_RoutersRepsonsityService.GetAllList(x => x.RolesID == _jwtAuthorization.GetField("RolesID"));
             //foreach (var item in data)
             //{
-            //    foreach (var router in roles_Routers)
-            //    {
-            //        if (router.RoutersID == item.ID)
-            //        {
-            //            TreeChildViewModel childViewModel = new TreeChildViewModel();
-            //            childViewModel.Id = item.ID;
-            //            childViewModel.Component = item.Component;
-            //            childViewModel.Name = item.Name;
-            //            childViewModel.Meta_icon = item.Meta_icon;
-            //            childViewModel.Meta_title = item.Meta_title;
-            //            childViewModel.Meta_content = item.Meta_content;
-            //            childViewModel.TreeChildren = GetChildList(childViewModel);
-            //            list.Add(childViewModel);
-            //            break;
-            //        }
-            //    } 
+            //    TreeChildViewModel childViewModel = new TreeChildViewModel();
+            //    childViewModel.Id = item.ID;
+            //    childViewModel.PId = item.ParentID;
+            //    childViewModel.PathRouter = item.PathRouter;
+            //    childViewModel.Component = item.Component;
+            //    childViewModel.Name = item.Name;
+            //    childViewModel.Meta_icon = item.Meta_icon;
+            //    childViewModel.Meta_title = item.Meta_title;
+            //    childViewModel.Meta_content = item.Meta_content;
+            //    childViewModel.Sorts = item.Sorts;
+            //    childViewModel.TreeChildren = GetChildList(childViewModel);
+            //    list.Add(childViewModel);
             //}
+            foreach (var item in data)
+            {
+                foreach (var router in roles_Routers)
+                {
+                    if (router.RoutersID == item.ID)
+                    {
+                        TreeChildViewModel childViewModel = new TreeChildViewModel();
+                        childViewModel.Id = item.ID;
+                        childViewModel.PId = item.ParentID;
+                        childViewModel.PathRouter = item.PathRouter;
+                        childViewModel.Component = item.Component;
+                        childViewModel.Name = item.Name;
+                        childViewModel.Meta_icon = item.Meta_icon;
+                        childViewModel.Meta_title = item.Meta_title;
+                        childViewModel.Meta_content = item.Meta_content;
+                        childViewModel.Sorts = item.Sorts;
+                        childViewModel.TreeChildren = GetChildList(childViewModel);
+                        list.Add(childViewModel);
+                        break;
+                    }
+                }
+            }
             return list;
         }
 

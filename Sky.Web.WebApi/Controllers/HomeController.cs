@@ -12,6 +12,7 @@ using Sky.Web.WebApi.PostViewModel;
 using Newtonsoft.Json.Linq;
 using Sky.RepsonsityService.IService;
 using Sky.RepsonsityService.Service;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Sky.Web.WebApi.Controllers
 {
@@ -34,7 +35,7 @@ namespace Sky.Web.WebApi.Controllers
 
 
         /// <summary>
-        /// 获取Token
+        /// 登陆获取Token
         /// </summary>
         /// <returns></returns>
         [Route("GetToken")]
@@ -57,17 +58,7 @@ namespace Sky.Web.WebApi.Controllers
 
                 if (entity != null)
                 {
-                    Dictionary<string, object> payload = new Dictionary<string, object>();
-                    payload.Add("ID", entity.ID);
-                    payload.Add("UserName", entity.UserName);
-                    payload.Add("Email", entity.Email);
-
-                    var tokenacces = new
-                    {
-                        AccessToken = Encrypts.CreateToken(payload, 30),
-                        Expires = 3600
-                    };
-                    result.rows = tokenacces;
+                    result.rows = _jwtAuthorization.CreateToken(entity);
                     result.verifiaction = true;
                     result.message = "登陆成功!";
                 }
@@ -89,6 +80,43 @@ namespace Sky.Web.WebApi.Controllers
             return JObject.FromObject(result);
         }
 
-        
+        /// <summary>
+        /// 退出登陆
+        /// </summary>
+        /// <returns></returns>
+        [Authorize]
+        [Route("LoginOut")]
+        [HttpPost]
+        public JObject LoginOut(string uid)
+        {
+            DataResult result = new DataResult();
+            result.verifiaction = false;
+            try
+            {
+                if (string.IsNullOrEmpty(uid))
+                {
+                    result.message = "用户ID不能为空!";
+                }
+
+                var jtoken = _jwtAuthorization.GetCurrentToken();
+                if (string.Format("{0}", jtoken.Payload["ID"]) == uid)
+                {
+                    _cacheService.Remove(uid);
+                    result.verifiaction = true;
+                    result.message = "退出成功!";
+                }
+            }
+            catch (Exception ex)
+            {
+                result.message = "非法登陆!";
+                return JObject.FromObject(result);
+            }
+            finally
+            {
+
+            }
+            return JObject.FromObject(result);
+        }
+
     }
 }

@@ -9,7 +9,7 @@ namespace Sky.Web.WebApi.ReturnViewModel
     {
         public bool verifiaction { get; set; }
         public string message { get; set; }
-
+        public int? statecode { get; set; }
         public object rows
         {
             get;set;

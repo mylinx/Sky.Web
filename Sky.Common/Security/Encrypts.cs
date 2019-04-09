@@ -40,7 +40,8 @@ namespace Sky.Common
             //claims.Add(new Claim("issued", DateTime.UtcNow.ToString()));
             foreach (var key in payLoad.Keys)
             {
-                var tempClaim = new Claim(key, payLoad[key]?.ToString());
+                 
+                var tempClaim = new Claim(key,string.Format("{0}",payLoad[key]));
                 claims.Add(tempClaim);
             }
 

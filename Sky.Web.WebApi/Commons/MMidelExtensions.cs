@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace Microsoft.AspNetCore.Builder
 {
+    /// <summary>
+    /// 中间件第二种写法
+    /// </summary>
     public static class MMidelExtensions
     {
         public static IApplicationBuilder MMidel(this IApplicationBuilder app)

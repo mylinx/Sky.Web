@@ -18,7 +18,7 @@ namespace Sky.Web.WebApi.Jwt
         public JwtAuthorzation(IHttpContextAccessor httpcontext, IServiceProvider cacheService)
         {
             _httpcontext = httpcontext;
-            _cacheService = cacheService.GetService<RedisCacheService>();
+            _cacheService = cacheService.GetService<MemoryCacheService>();
         }
 
 
@@ -34,14 +34,19 @@ namespace Sky.Web.WebApi.Jwt
             payload.Add("ID", entity.ID);
             payload.Add("UserName", entity.UserName);
             payload.Add("Email", entity.Email);
-
+            payload.Add("RolesID", entity.RoleID);
             var tokenacces = new
             {
                 UserId = entity.ID,
+                //RolesID=entity.RoleID,
                 AccessToken = Encrypts.CreateToken(payload, Convert.ToInt32(ConfigHelper.GetSectionValue("expiresAt"))),
                 Expires = new DateTimeOffset(expirteTime).ToUnixTimeSeconds(),
                 Success=true
             };
+            if (tokenacces.Success)
+            {
+                _cacheService.Add(entity.ID, tokenacces.AccessToken);
+            }
             return tokenacces;
         }
 
@@ -63,6 +68,7 @@ namespace Sky.Web.WebApi.Jwt
             Dictionary<string, object> payload = new Dictionary<string, object>();
             payload.Add("ID", readtoken.Payload["ID"]);
             payload.Add("UserName", readtoken.Payload["UserName"]);
+            payload.Add("RolesID", readtoken.Payload["RolesID"]);
             payload.Add("Email", readtoken.Payload["Email"]);
 
             var tokenacces = new
@@ -102,11 +108,31 @@ namespace Sky.Web.WebApi.Jwt
         /// 获取当前token 
         /// </summary>
         /// <returns></returns>
-        public string GetCurrentToken()
+        public JwtSecurityToken GetCurrentToken()
         {
             var token = _httpcontext.HttpContext.Request.Headers["Authorization"];
+            if (token.Count > 0)
+            {
+                JwtSecurityToken jtoken = new JwtSecurityTokenHandler().ReadJwtToken(token.ToString().Split(" ").Last());
+                return jtoken;
+            }
+            return null;
+        }
 
-            return token.ToString();
+
+        /// <summary>
+        /// 获取特定值
+        /// </summary>
+        /// <param name="field">约定: ID, UserName,RolesID</param>
+        /// <returns></returns>
+        public string GetField(string field)
+        {
+            var list = GetCurrentToken();
+            if (list != null)
+            {
+                return list.Payload[field].ToString();
+            }
+            return null;
         }
     }
 }
