@@ -62,10 +62,6 @@ namespace Sky.Web.WebApi.Controllers.RolesContrllers
 
                 result.rows = pagedList;
             }
-            catch (Exception ex)
-            {
-                result.message = ex.Message.ToString();
-            }
             finally
             {
 
@@ -103,11 +99,7 @@ namespace Sky.Web.WebApi.Controllers.RolesContrllers
                 {
                     result.message = "删除失败!";
                 }
-            }
-            catch (Exception ex)
-            {
-                result.message = ex.Message.ToString();
-            }
+            } 
             finally
             {
 
@@ -160,11 +152,7 @@ namespace Sky.Web.WebApi.Controllers.RolesContrllers
                 {
                     result.message = "修改失败,可能是数据不存在或已删除!";
                 }
-            }
-            catch (Exception ex)
-            {
-                result.message = ex.Message.ToString();
-            }
+            } 
             finally
             {
 
@@ -207,11 +195,7 @@ namespace Sky.Web.WebApi.Controllers.RolesContrllers
 
                 result.verifiaction = true;
                 result.message = "写入成功!";
-            }
-            catch (Exception ex)
-            {
-                result.message = ex.Message.ToString();
-            }
+            } 
             finally
             {
 

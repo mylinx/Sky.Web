@@ -11,6 +11,7 @@ using Sky.Web.WebApi.Jwt;
 using Newtonsoft.Json.Linq;
 using log4net;
 using Sky.Common.Emuns;
+using System.Net;
 
 namespace Sky.Web.WebApi.Commons
 {
@@ -44,12 +45,12 @@ namespace Sky.Web.WebApi.Commons
 
             try
             {
-                var token= _jwtAuthorization.GetCurrentToken();
+                var token = _jwtAuthorization.GetCurrentToken();
                 if (token != null)
                 {
                     if (!_cacheService.Exists(token.Payload["ID"].ToString()))
                     {
-                        result.statecode = (int)HttpStateEmuns.Invalid;
+                        result.statecode = (int)HttpStatusCode.Forbidden;
                         result.message = "token失效,请重新登录!";
                         return context.Response.WriteAsync(JsonConvert.SerializeObject(result));
                     }
@@ -58,14 +59,19 @@ namespace Sky.Web.WebApi.Commons
                         result.verifiaction = true;
                     }
                 }
-                return _next(context);
+
             }
             catch (Exception ex)
             {
-                result.statecode = (int)HttpStateEmuns.Danger;
-                result.message = "非法请求!";
+                result.statecode = (int)HttpStatusCode.InternalServerError;
+                result.message = ex.Message.ToString();
                 return context.Response.WriteAsync(JsonConvert.SerializeObject(result));
             }
+            finally
+            {
+
+            }
+            return _next(context);
         }
     }
 }

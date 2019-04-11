@@ -24,6 +24,7 @@ using Sky.Web.WebApi.Controllers;
 using Sky.Web.WebApi.Jwt;
 using Microsoft.Extensions.Caching.Redis;
 using Sky.Web.WebApi.Commons;
+using Sky.Web.WebApi.Filters;
 
 namespace Sky.Web.WebApi
 {
@@ -85,13 +86,15 @@ namespace Sky.Web.WebApi
                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtSecurityKey"]))
 
                };
+                
                //jwbearoption.SecurityTokenValidators.Clear();//将SecurityTokenValidators清除掉，否则它会在里面拿验证
            });
 
             services.AddMvc(option =>
             {
                 //全局配置错误日志
-                //option.Filters.Add<HttpGlobalExceptionFilter>();
+                //option.Filters.Add<AuthorsFilters>();
+                option.Filters.Add<LogersFilters>();
             }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 

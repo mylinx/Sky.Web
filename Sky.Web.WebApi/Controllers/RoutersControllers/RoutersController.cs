@@ -82,22 +82,7 @@ namespace Sky.Web.WebApi.Controllers.RoutersControllers
 
             string ss = _jwtAuthorization.GetField("RolesID");
 
-            roles_Routers = _roles_RoutersRepsonsityService.GetAllList(x => x.RolesID == _jwtAuthorization.GetField("RolesID"));
-            //foreach (var item in data)
-            //{
-            //    TreeChildViewModel childViewModel = new TreeChildViewModel();
-            //    childViewModel.Id = item.ID;
-            //    childViewModel.PId = item.ParentID;
-            //    childViewModel.PathRouter = item.PathRouter;
-            //    childViewModel.Component = item.Component;
-            //    childViewModel.Name = item.Name;
-            //    childViewModel.Meta_icon = item.Meta_icon;
-            //    childViewModel.Meta_title = item.Meta_title;
-            //    childViewModel.Meta_content = item.Meta_content;
-            //    childViewModel.Sorts = item.Sorts;
-            //    childViewModel.TreeChildren = GetChildList(childViewModel);
-            //    list.Add(childViewModel);
-            //}
+            roles_Routers = _roles_RoutersRepsonsityService.GetAllList(x => x.RolesID == _jwtAuthorization.GetField("RolesID")); 
             foreach (var item in data)
             {
                 foreach (var router in roles_Routers)

@@ -16,7 +16,7 @@ using Sky.Web.WebApi.ReturnViewModel;
 namespace Sky.Web.WebApi.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
+    //[Authorize]
     [ApiController]
     public class UserSystemController : ControllerBase
     {
@@ -69,10 +69,6 @@ namespace Sky.Web.WebApi.Controllers
 
                 result.rows = pagedList;
             }
-            catch (Exception ex)
-            {
-                result.message = ex.Message.ToString();
-            }
             finally
             {
 
@@ -107,10 +103,6 @@ namespace Sky.Web.WebApi.Controllers
                 {
                     result.message = "删除失败!";
                 }
-            }
-            catch (Exception ex)
-            {
-                result.message = ex.Message.ToString();
             }
             finally
             {
@@ -160,10 +152,6 @@ namespace Sky.Web.WebApi.Controllers
                 result.verifiaction = true;
                 result.message = "写入成功!";
             }
-            catch (Exception ex)
-            {
-                result.message = ex.Message.ToString();
-            }
             finally
             {
 
@@ -212,15 +200,10 @@ namespace Sky.Web.WebApi.Controllers
                 result.verifiaction = true;
                 result.message = "写入成功!";
             }
-            catch (Exception ex)
-            {
-                result.message = ex.Message.ToString();
-            }
             finally
             {
 
-            }
-
+            } 
             return JObject.FromObject(result);
         }
 

@@ -64,7 +64,7 @@ namespace Sky.Web.WebApi.Controllers.PerssionControllers
                 if (perssionEntity.ID.IsEmpty())
                 {
                     perssionEntity.ID = Guid.NewGuid().ToString();
-                    await _perssionRepsonsityService.InsertAsync(perssionEntity); 
+                    await _perssionRepsonsityService.InsertAsync(perssionEntity);
                 }
                 else
                 {
@@ -79,28 +79,27 @@ namespace Sky.Web.WebApi.Controllers.PerssionControllers
                         _perssionRepsonsityService.Update(perssionEntity);
                     }
                 }
-                 
+
                 if (IsEnable.ToBool())//如果为True默认创建按钮权限.
                 {
                     PessiondetailEntity entity = new PessiondetailEntity();
-                    string[] str = { "Add", "Del", "Update"};
+                    string[] str = { "Add", "Del", "Update" };
                     for (int i = 0; i < 4; i++)
                     {
                         entity.ID = Guid.NewGuid().ToString();
                         entity.PerssionID = perssionEntity.ID;
                         entity.BtName = str[i];
                         entity.CreateDate = DateTime.Now.ToString();
-                       // await _pessiondetailRepsonsityService.InsertAsync(entity);
+                        // await _pessiondetailRepsonsityService.InsertAsync(entity);
                     }
                 }
-               
+
                 dataResult.verifiaction = true;
-                dataResult.message = "新增成功!"; 
+                dataResult.message = "新增成功!";
             }
-            catch (Exception ex)
+            finally
             {
-                
-            } 
+            }
             return JObject.FromObject(dataResult);
         }
 
@@ -128,13 +127,13 @@ namespace Sky.Web.WebApi.Controllers.PerssionControllers
                     dataResult.message = "删除成功!";
                 }
                 else
-                { 
+                {
                     dataResult.message = "删除失败!ID不能为空";
-                } 
+                }
             }
-            catch (Exception ex)
+            finally
             {
-                dataResult.message = ex.Message.ToString();
+
             }
             return JObject.FromObject(dataResult); 
         }

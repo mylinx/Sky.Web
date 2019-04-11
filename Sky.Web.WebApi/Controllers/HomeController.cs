@@ -10,13 +10,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Sky.Web.WebApi.ReturnViewModel;
 using Sky.Web.WebApi.PostViewModel;
 using Newtonsoft.Json.Linq;
-using Sky.RepsonsityService.IService;
-using Sky.RepsonsityService.Service;
-using Microsoft.AspNetCore.Authorization;
+using Sky.RepsonsityService.IService; 
+using Microsoft.AspNetCore.Authorization; 
 
 namespace Sky.Web.WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]")] 
     [ApiController]
     public class HomeController : ControllerBase
     {
@@ -38,7 +37,7 @@ namespace Sky.Web.WebApi.Controllers
         /// 登陆获取Token
         /// </summary>
         /// <returns></returns>
-        [Route("GetToken")]
+        [Route("GetToken")] 
         [HttpPost]
         public JObject GetToken([FromBody]Post_UserViewModel obj)
         {
@@ -67,11 +66,6 @@ namespace Sky.Web.WebApi.Controllers
                     result.message = "获取token令牌失败!";
                     result.verifiaction = true;
                 }
-            }
-            catch (Exception ex)
-            {
-                result.message = "非法登陆!";
-                return JObject.FromObject(result);
             }
             finally
             {
@@ -105,11 +99,6 @@ namespace Sky.Web.WebApi.Controllers
                     result.verifiaction = true;
                     result.message = "退出成功!";
                 }
-            }
-            catch (Exception ex)
-            {
-                result.message = "非法登陆!";
-                return JObject.FromObject(result);
             }
             finally
             {
