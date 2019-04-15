@@ -12,6 +12,7 @@ using Sky.Common;
 using Sky.Entity;
 using Sky.RepsonsityService.IService;
 using Sky.Web.WebApi.ReturnViewModel;
+using System.Net;
 
 namespace Sky.Web.WebApi.Controllers
 {
@@ -21,9 +22,12 @@ namespace Sky.Web.WebApi.Controllers
     public class UserSystemController : ControllerBase
     {
         IUserRepsonsityService _userRepsonsityService;
-        public UserSystemController(IUserRepsonsityService userRepsonsityService)
+        IRolesRepsonsityService _rolesRepsonsityService;
+        public UserSystemController(IUserRepsonsityService userRepsonsityService,
+            IRolesRepsonsityService rolesRepsonsityService)
         {
             _userRepsonsityService = userRepsonsityService;
+            _rolesRepsonsityService = rolesRepsonsityService;
         }
          
 
@@ -117,7 +121,7 @@ namespace Sky.Web.WebApi.Controllers
         /// </summary>
         /// <param name="_userEntity"></param>
         /// <returns></returns>
-        [Route("updateUsers")]
+        [Route("updateUser")]
         [HttpPost]
         public JObject Update([FromBody]UserEntity _userEntity)
         {
@@ -162,6 +166,44 @@ namespace Sky.Web.WebApi.Controllers
         }
 
 
+        /// <summary>
+        /// 获取用户信息
+        /// </summary>
+        /// <param name="id">主键</param>
+        /// <returns></returns>
+        [Route("detailsUser")]
+        public JObject Details(string id)
+        {
+            DataResult result = new DataResult()
+            {
+                verifiaction = false,
+                statecode=(int)HttpStatusCode.BadRequest
+            };
+            try
+            {
+                if(string.IsNullOrEmpty(id))
+                    return JObject.FromObject(result);
+
+
+                UserEntity entity = _userRepsonsityService.Find(id);
+                if (entity != null)
+                {
+                    result.verifiaction = false;
+                    result.statecode = (int)HttpStatusCode.OK;
+                    result.rows = new
+                    {
+                        id=entity.ID,
+                        rolesid=entity.RoleID, 
+                        email=entity.Email
+                    };
+                }
+            }
+            finally
+            {
+                
+            }
+            return JObject.FromObject(result);
+        }
 
         /// <summary>
         /// 新增账号
@@ -207,5 +249,40 @@ namespace Sky.Web.WebApi.Controllers
             return JObject.FromObject(result);
         }
 
+
+        /// <summary>
+        /// 获取角色列表
+        /// </summary>
+        /// <returns></returns>
+        public JObject GetRoles()
+        { 
+            DataResult result = new DataResult()
+            {
+                verifiaction = false,
+                statecode = (int)HttpStatusCode.BadRequest
+            };
+
+            try
+            {
+                List<RolesEntity> list = _rolesRepsonsityService.GetAllList();
+                if (list.Count > 0)
+                {
+                    
+                    result.verifiaction = true;
+                    result.rows = from roles in list
+                                  select new
+                                  {
+                                      id=roles.ID,
+                                      name=roles.RolesName
+                                  };
+                    result.statecode = (int)HttpStatusCode.OK;
+                }
+                return JObject.FromObject(result);
+            }
+            finally
+            {
+                
+            }
+        }
     }
 }
