@@ -47,7 +47,7 @@ namespace Sky.Web.WebApi.Controllers
             try
             {
                 int _pageIndex = 1;
-                int _pageSize = 20;
+                int _pageSize = 3;
                 Expression<Func<UserEntity, bool>> expression = null;
                 //if (!string.IsNullOrEmpty(userName))
                 if (!userName.IsEmpty())
@@ -99,7 +99,7 @@ namespace Sky.Web.WebApi.Controllers
                 if (!string.IsNullOrEmpty(id))
                 {
                     _userRepsonsityService.Delete(id.Trim());
-                     
+                    _userRepsonsityService.SaveChange();
                     result.verifiaction = true;
                     result.message = "删除成功!";
                 }
@@ -132,27 +132,31 @@ namespace Sky.Web.WebApi.Controllers
 
             try
             {
-                if (_userRepsonsityService.IsExists(x => x.UserName == _userEntity.UserName))
-                {
-                    result.message = "修改失败,已存在该账号!";
-                    return JObject.FromObject(result);
-                }
+                //if (_userRepsonsityService.IsExists(x => x.UserName == _userEntity.UserName))
+                //{
+                //    result.message = "修改失败,已存在该账号!";
+                //    return JObject.FromObject(result);
+                //}
 
                 UserEntity userEntity = new UserEntity
                 {
                     ID = _userEntity.ID,
-                    UserName = _userEntity.UserName,
+                    RoleID=_userEntity.RoleID,
+                    //UserName = _userEntity.UserName,
                     PassWord = Encrypts.EncryptPassword(_userEntity.PassWord), 
-                    Email = _userEntity.Email
+                    Email = _userEntity.Email,
+                    Remark=_userEntity.Remark
                 };
 
                 int a=  _userRepsonsityService.Update(userEntity, new Expression<Func<UserEntity, object>>[]
                 {
-                     m=>m.UserName,
+                     //m=>m.UserName,
+                     m=>m.RoleID,
                      m=>m.PassWord,
-                     m=>m.Email
+                     m=>m.Email,
+                     m=>m.Remark
                 });
-
+                _userRepsonsityService.SaveChange();
                 result.verifiaction = true;
                 result.message = "写入成功!";
             }
@@ -210,6 +214,7 @@ namespace Sky.Web.WebApi.Controllers
         /// </summary>
         /// <param name="_userEntity"></param>
         /// <returns></returns>
+        [Route("addUser")]
         [HttpPost]
         public JObject Register([FromBody]UserEntity _userEntity)
         {
@@ -238,7 +243,7 @@ namespace Sky.Web.WebApi.Controllers
                     Remark = _userEntity.Remark
                 };
                 _userRepsonsityService.Insert(userEntity);
-
+                _userRepsonsityService.SaveChange();
                 result.verifiaction = true;
                 result.message = "写入成功!";
             }
