@@ -47,7 +47,7 @@ namespace Sky.Web.WebApi.Controllers
             try
             {
                 int _pageIndex = 1;
-                int _pageSize = 3;
+                int _pageSize = 10;
                 Expression<Func<UserEntity, bool>> expression = null;
                 //if (!string.IsNullOrEmpty(userName))
                 if (!userName.IsEmpty())
@@ -67,11 +67,23 @@ namespace Sky.Web.WebApi.Controllers
                 }
 
                 IPagedList<UserEntity> pagedList = await _userRepsonsityService.GetPagedListAsync(expression, null, null, _pageIndex, _pageSize);
-
+                
                 result.verifiaction = true;
                 result.message = "获取成功!";
-
-                result.rows = pagedList;
+                result.rows = new
+                {
+                     total=pagedList.TotalCount,
+                     pageindex= pagedList.PageIndex,
+                     pagesize=pagedList.PageSize,
+                     items=from p in  pagedList.Items select new
+                     {
+                         id=p.ID,
+                         name=p.UserName,
+                         rolename= GetRolesNameByID(p.RoleID),
+                         email=p.Email,
+                         remark=p.Remark
+                     }
+                };
             }
             finally
             {
@@ -288,6 +300,30 @@ namespace Sky.Web.WebApi.Controllers
             {
                 
             }
+        }
+
+
+
+        /// <summary>
+        /// 获取角色ID
+        /// </summary>
+        /// <param name="ID"></param>
+        /// <returns></returns>
+        private  string GetRolesNameByID(string ID)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(ID))
+                    return "";
+                RolesEntity rolesEntity = _rolesRepsonsityService.Find(ID);
+                if (rolesEntity != null)
+                    return rolesEntity.RolesName;
+            }
+            finally
+            {
+
+            }
+            return "";
         }
     }
 }
