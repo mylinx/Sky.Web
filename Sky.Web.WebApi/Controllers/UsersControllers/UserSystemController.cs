@@ -17,7 +17,7 @@ using System.Net;
 namespace Sky.Web.WebApi.Controllers
 {
     [Route("api/[controller]")]
-    //[Authorize]
+    [Authorize]
     [ApiController]
     public class UserSystemController : ControllerBase
     {
@@ -271,6 +271,8 @@ namespace Sky.Web.WebApi.Controllers
         /// 获取角色列表
         /// </summary>
         /// <returns></returns>
+        [Route("getroles")]
+        [HttpGet]
         public JObject GetRoles()
         { 
             DataResult result = new DataResult()
