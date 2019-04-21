@@ -115,7 +115,7 @@ namespace Sky.Web.WebApi
             app.UseHttpsRedirection();
             app.UseCors();
 
-            app.UseMiddleware<MyMiddle>();
+            //app.UseMiddleware<MyMiddle>();
 
             //app.MMidel();
 

@@ -66,7 +66,7 @@ namespace Sky.Web.WebApi.Controllers
                     _pageSize = pageSize.ToInt();
                 }
 
-                IPagedList<UserEntity> pagedList = await _userRepsonsityService.GetPagedListAsync(expression, null, null, _pageIndex, _pageSize);
+                IPagedList<UserEntity> pagedList = await _userRepsonsityService.GetPagedListAsync(expression, x=>x.OrderByDescending(p=>p.CreateDate), null, _pageIndex, _pageSize);
                 
                 result.verifiaction = true;
                 result.message = "获取成功!";
@@ -75,14 +75,15 @@ namespace Sky.Web.WebApi.Controllers
                      total=pagedList.TotalCount,
                      pageindex= pagedList.PageIndex,
                      pagesize=pagedList.PageSize,
-                     items=from p in  pagedList.Items select new
+                     items=(from p in  pagedList.Items select new
                      {
                          id=p.ID,
                          name=p.UserName,
                          rolename= GetRolesNameByID(p.RoleID),
                          email=p.Email,
-                         remark=p.Remark
-                     }
+                         remark=p.Remark,
+                         createdate=p.CreateDate
+                     })
                 };
             }
             finally
