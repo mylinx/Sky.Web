@@ -145,21 +145,38 @@ namespace Sky.Web.WebApi.Controllers
 
             try
             {
-                //if (_userRepsonsityService.IsExists(x => x.UserName == _userEntity.UserName))
-                //{
-                //    result.message = "修改失败,已存在该账号!";
-                //    return JObject.FromObject(result);
-                //}
-
-                UserEntity userEntity = new UserEntity
+                if (_userRepsonsityService.IsExists(x => x.UserName == _userEntity.UserName))
                 {
-                    ID = _userEntity.ID,
-                    RoleID=_userEntity.RoleID,
+                    result.message = "修改失败,已存在该账号!";
+                    return JObject.FromObject(result);
+                }
+
+
+                UserEntity userEntity= _userRepsonsityService.Find(_userEntity.ID);
+                if (userEntity != null)
+                {
+                    userEntity.ID = _userEntity.ID;
+                    userEntity.RoleID = _userEntity.RoleID;
                     //UserName = _userEntity.UserName,
-                    //PassWord = Encrypts.EncryptPassword(_userEntity.PassWord), 
-                    Email = _userEntity.Email,
-                    Remark=_userEntity.Remark
-                };
+                    if (!string.IsNullOrEmpty(_userEntity.PassWord))
+                    {
+                        userEntity.PassWord = Encrypts.EncryptPassword(_userEntity.PassWord);
+                    } 
+                    userEntity.Email = _userEntity.Email;
+                    userEntity.Remark = _userEntity.Remark;
+                }
+
+
+
+                //UserEntity userEntity = new UserEntity
+                //{
+                //    ID = _userEntity.ID,
+                //    RoleID=_userEntity.RoleID,
+                //    //UserName = _userEntity.UserName,
+                //    PassWord = Encrypts.EncryptPassword(_userEntity.PassWord), 
+                //    Email = _userEntity.Email,
+                //    Remark=_userEntity.Remark
+                //};
 
                 int a=  _userRepsonsityService.Update(userEntity, new Expression<Func<UserEntity, object>>[]
                 {
