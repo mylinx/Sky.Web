@@ -156,7 +156,7 @@ namespace Sky.Web.WebApi.Controllers
                     ID = _userEntity.ID,
                     RoleID=_userEntity.RoleID,
                     //UserName = _userEntity.UserName,
-                    PassWord = Encrypts.EncryptPassword(_userEntity.PassWord), 
+                    //PassWord = Encrypts.EncryptPassword(_userEntity.PassWord), 
                     Email = _userEntity.Email,
                     Remark=_userEntity.Remark
                 };
@@ -205,12 +205,13 @@ namespace Sky.Web.WebApi.Controllers
                 UserEntity entity = _userRepsonsityService.Find(id);
                 if (entity != null)
                 {
-                    result.verifiaction = false;
+                    result.verifiaction = true;
                     result.statecode = (int)HttpStatusCode.OK;
                     result.rows = new
                     {
                         id=entity.ID,
-                        rolesid=entity.RoleID, 
+                        username=entity.UserName,
+                        roleid=entity.RoleID, 
                         email=entity.Email
                     };
                 }
@@ -248,7 +249,7 @@ namespace Sky.Web.WebApi.Controllers
                     ID = Guid.NewGuid().ToString(),
                     UserName = _userEntity.UserName,
                     PassWord = Encrypts.EncryptPassword(_userEntity.PassWord),
-
+                    RoleID = _userEntity.RoleID,
                     Email = _userEntity.Email,
                     IsLock = 0,
                     LoginLastDate = DateTime.Now.ToString(),
