@@ -14,9 +14,10 @@ namespace Sky.Entity
         public string UserName { get; set; }
         public string PassWord { get; set; }
         public string Email { get; set; }
-        public int ? IsLock { get; set; }
+        public int? IsLock { get; set; }
         public string LoginLastDate { get; set; }
         public string CreateDate { get; set; }
         public string Remark { get; set; }
+         
     }
 }

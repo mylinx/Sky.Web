@@ -32,6 +32,21 @@ namespace Sky.Web.WebApi.Controllers
             this._userRepsonsityService = userRepsonsityService;
         }
 
+        [Route("Test")]
+        [HttpGet]
+        public JObject Test()
+        {
+            DataResult result = new DataResult()
+            {
+                verifiaction = false,
+                message="这是测试",
+
+            };
+            
+            _userRepsonsityService.Test();
+            return JObject.FromObject(result);
+        }
+
 
         /// <summary>
         /// 登陆获取Token

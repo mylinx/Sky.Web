@@ -2,15 +2,10 @@
 using System;
 using Sky.Entity;
 using System.Linq;
-using Sky.RepsonsityService.IService;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
-using System.Transactions;
-using Sky.Common;
-using System.Data.SqlClient;
-using System.Collections.Generic;
+using Sky.RepsonsityService.IService; 
+using Sky.Common; 
 using System.Linq.Expressions;
-using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace Sky.RepsonsityService.Service
 {
@@ -47,6 +42,8 @@ namespace Sky.RepsonsityService.Service
             return null;
         }
 
+   
+
 
         /// <summary>
         /// 注册用户
@@ -71,6 +68,30 @@ namespace Sky.RepsonsityService.Service
                 this.dbcontext.Dispose();
             }
             return false;
+        }
+
+        public void Test()
+        {
+            var aa1 = (from a in dbcontext.Set<UserEntity>() join  b in dbcontext.Set<RolesEntity>() on a.RoleID==null?"":a.RoleID  equals b.ID
+                       into cc from c  in cc.DefaultIfEmpty() //加入这句是left join, 去掉是执行inner join (right join 同理)
+                       select new
+            {
+                    a.ID,
+                    c.RolesName,
+                    a.RoleID,
+                    a.Remark
+            });
+            aa1.Count();
+            var list = aa1.Skip(1).Take(20);
+
+            var aa = base.FromSql<Models1>(" SELECT A.ID as aa , a.RoleID AS bb ,R.RolesName as cc FROM userentity A LEFT  JOIN ROLES  R on A.RoleID = R.ID ");
+        }
+
+        public class Models1
+        {
+            public string aa { get; set; }
+            public string bb { get; set; }
+            public string cc { get; set; }
         }
     }
 }
