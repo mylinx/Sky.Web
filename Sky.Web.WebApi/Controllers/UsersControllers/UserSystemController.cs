@@ -118,7 +118,7 @@ namespace Sky.Web.WebApi.Controllers
                 }
                 else
                 {
-                    result.message = "删除失败!";
+                    result.message = "删除失败,id参数不能为空!";
                 }
             }
             finally
@@ -145,13 +145,12 @@ namespace Sky.Web.WebApi.Controllers
 
             try
             {
-                if (_userRepsonsityService.IsExists(x => x.UserName == _userEntity.UserName))
-                {
-                    result.message = "修改失败,已存在该账号!";
-                    return JObject.FromObject(result);
-                }
-
-
+                //if (_userRepsonsityService.IsExists(x => x.UserName == _userEntity.UserName))
+                //{
+                //    result.message = "修改失败,已存在该账号!";
+                //    return JObject.FromObject(result);
+                //}
+                 
                 UserEntity userEntity= _userRepsonsityService.Find(_userEntity.ID);
                 if (userEntity != null)
                 {

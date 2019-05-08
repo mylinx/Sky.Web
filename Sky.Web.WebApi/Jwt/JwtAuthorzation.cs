@@ -39,6 +39,7 @@ namespace Sky.Web.WebApi.Jwt
             {
                 UserId = entity.ID,
                 //RolesID=entity.RoleID,
+                entity.UserName,
                 AccessToken = Encrypts.CreateToken(payload, Convert.ToInt32(ConfigHelper.GetSectionValue("expiresAt"))),
                 Expires = new DateTimeOffset(expirteTime).ToUnixTimeSeconds(),
                 Success=true
