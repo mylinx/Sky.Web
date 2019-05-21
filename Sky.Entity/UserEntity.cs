@@ -18,6 +18,9 @@ namespace Sky.Entity
         public string LoginLastDate { get; set; }
         public string CreateDate { get; set; }
         public string Remark { get; set; }
+
+        [ForeignKey("RoleID")]
+        public RolesEntity roles { get; set; }
          
     }
 }

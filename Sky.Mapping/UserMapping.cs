@@ -13,7 +13,7 @@ namespace Sky.Mapping
     {
         public void Configure(EntityTypeBuilder<UserEntity> builder)
         {
-
+            
         }
     }
 }
