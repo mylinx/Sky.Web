@@ -79,7 +79,7 @@ namespace Sky.Web.WebApi.Controllers
                      {
                          id=p.ID,
                          name=p.UserName,
-                         rolename= p.roles.RolesName,//GetRolesNameByID(p.RoleID),
+                         rolename=GetRolesNameByID(p.RoleID),
                          email=p.Email,
                          remark=p.Remark,
                          createdate=p.CreateDate
