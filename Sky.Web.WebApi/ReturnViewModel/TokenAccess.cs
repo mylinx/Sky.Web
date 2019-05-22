@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Sky.Web.WebApi.ReturnViewModel
+namespace Sky.Web.WebApi.Models
 {
     public class TokenAccess
     {

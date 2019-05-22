@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Sky.Web.WebApi.PostViewModel
+namespace Sky.Web.WebApi.Models
 {
     public class Post_UserViewModel
     {
-        public string name { get; set; }
-        public string password { get; set; }
+        public string Name { get; set; }
+        public string Password { get; set; }
     }
 }

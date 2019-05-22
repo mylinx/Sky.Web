@@ -11,7 +11,7 @@ using Newtonsoft.Json.Linq;
 using Sky.Common;
 using Sky.Entity;
 using Sky.RepsonsityService.IService;
-using Sky.Web.WebApi.ReturnViewModel;
+using Sky.Web.WebApi.Models;
 using System.Net;
 
 namespace Sky.Web.WebApi.Controllers
@@ -43,7 +43,7 @@ namespace Sky.Web.WebApi.Controllers
         [HttpGet]
         public async Task<JObject> GetUserList(string userName,string rolesID,string pageIndex,string pageSize)
         {
-            DataResult result = new DataResult() { verifiaction=false };
+            DataResult result = new DataResult() { Verifiaction=false };
             try
             {
                 int _pageIndex = 1;
@@ -68,9 +68,9 @@ namespace Sky.Web.WebApi.Controllers
 
                 IPagedList<UserEntity> pagedList = await _userRepsonsityService.GetPagedListAsync(expression, x=>x.OrderByDescending(p=>p.CreateDate), null, _pageIndex, _pageSize);
                 
-                result.verifiaction = true;
-                result.message = "获取成功!";
-                result.rows = new
+                result.Verifiaction = true;
+                result.Message = "获取成功!";
+                result.Rows = new
                 {
                      total=pagedList.TotalCount,
                      pageindex= pagedList.PageIndex,
@@ -105,7 +105,7 @@ namespace Sky.Web.WebApi.Controllers
         {
             DataResult result = new DataResult()
             {
-                verifiaction = false
+                Verifiaction = false
             };
             try
             {
@@ -113,12 +113,12 @@ namespace Sky.Web.WebApi.Controllers
                 {
                     _userRepsonsityService.Delete(id.Trim());
                     _userRepsonsityService.SaveChange();
-                    result.verifiaction = true;
-                    result.message = "删除成功!";
+                    result.Verifiaction = true;
+                    result.Message = "删除成功!";
                 }
                 else
                 {
-                    result.message = "删除失败,id参数不能为空!";
+                    result.Message = "删除失败,id参数不能为空!";
                 }
             }
             finally
@@ -140,14 +140,14 @@ namespace Sky.Web.WebApi.Controllers
         {
             DataResult result = new DataResult
             {
-                verifiaction = false
+               Verifiaction = false
             };
 
             try
             {
                 //if (_userRepsonsityService.IsExists(x => x.UserName == _userEntity.UserName))
                 //{
-                //    result.message = "修改失败,已存在该账号!";
+                //    result.Message = "修改失败,已存在该账号!";
                 //    return JObject.FromObject(result);
                 //}
                  
@@ -186,8 +186,8 @@ namespace Sky.Web.WebApi.Controllers
                      m=>m.Remark
                 });
                 _userRepsonsityService.SaveChange();
-                result.verifiaction = true;
-                result.message = "写入成功!";
+                result.Verifiaction = true;
+                result.Message = "写入成功!";
             }
             finally
             {
@@ -209,8 +209,8 @@ namespace Sky.Web.WebApi.Controllers
         {
             DataResult result = new DataResult()
             {
-                verifiaction = false,
-                statecode=(int)HttpStatusCode.BadRequest
+                Verifiaction = false,
+                Statecode=(int)HttpStatusCode.BadRequest
             };
             try
             {
@@ -221,9 +221,9 @@ namespace Sky.Web.WebApi.Controllers
                 UserEntity entity = _userRepsonsityService.Find(id);
                 if (entity != null)
                 {
-                    result.verifiaction = true;
-                    result.statecode = (int)HttpStatusCode.OK;
-                    result.rows = new
+                    result.Verifiaction = true;
+                    result.Statecode = (int)HttpStatusCode.OK;
+                    result.Rows = new
                     {
                         id=entity.ID,
                         username=entity.UserName,
@@ -250,13 +250,13 @@ namespace Sky.Web.WebApi.Controllers
         {
             DataResult result = new DataResult()
             {
-                verifiaction = false
+                Verifiaction = false
             };
             try
             {
                 if (_userRepsonsityService.IsExists(x => x.UserName == _userEntity.UserName))
                 {
-                    result.message = "已存在该账号!";
+                    result.Message = "已存在该账号!";
                     return JObject.FromObject(result);
                 }
 
@@ -274,8 +274,8 @@ namespace Sky.Web.WebApi.Controllers
                 };
                 _userRepsonsityService.Insert(userEntity);
                 _userRepsonsityService.SaveChange();
-                result.verifiaction = true;
-                result.message = "写入成功!";
+                result.Verifiaction = true;
+                result.Message = "写入成功!";
             }
             finally
             {
@@ -295,8 +295,8 @@ namespace Sky.Web.WebApi.Controllers
         { 
             DataResult result = new DataResult()
             {
-                verifiaction = false,
-                statecode = (int)HttpStatusCode.BadRequest
+                Verifiaction = false,
+                Statecode = (int)HttpStatusCode.BadRequest
             };
 
             try
@@ -305,14 +305,14 @@ namespace Sky.Web.WebApi.Controllers
                 if (list.Count > 0)
                 {
                     
-                    result.verifiaction = true;
-                    result.rows = from roles in list
+                    result.Verifiaction = true;
+                    result.Rows = from roles in list
                                   select new
                                   {
                                       id=roles.ID,
                                       name=roles.RolesName
                                   };
-                    result.statecode = (int)HttpStatusCode.OK;
+                    result.Statecode = (int)HttpStatusCode.OK;
                 }
                 return JObject.FromObject(result);
             }

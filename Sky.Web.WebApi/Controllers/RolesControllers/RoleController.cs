@@ -10,7 +10,7 @@ using Newtonsoft.Json.Linq;
 using Sky.Common;
 using Sky.Entity;
 using Sky.RepsonsityService.IService;
-using Sky.Web.WebApi.ReturnViewModel;
+using Sky.Web.WebApi.Models;
 
 namespace Sky.Web.WebApi.Controllers.RolesContrllers
 {
@@ -35,7 +35,7 @@ namespace Sky.Web.WebApi.Controllers.RolesContrllers
         [HttpGet]
         public async Task<JObject> GetRoleList(string name , string pageIndex, string pageSize)
         {
-            DataResult result = new DataResult() { verifiaction = false };
+            DataResult result = new DataResult() { Verifiaction = false };
             try
             {
                 int _pageIndex = 1;
@@ -57,10 +57,10 @@ namespace Sky.Web.WebApi.Controllers.RolesContrllers
 
                 IPagedList<RolesEntity> pagedList = await _rolesRepsonsityService.GetPagedListAsync(expression, null, null, _pageIndex, _pageSize);
 
-                result.verifiaction = true;
-                result.message = "获取成功!";
+                result.Verifiaction = true;
+                result.Message = "获取成功!";
 
-                result.rows = pagedList;
+                result.Rows = pagedList;
             }
             finally
             {
@@ -84,7 +84,7 @@ namespace Sky.Web.WebApi.Controllers.RolesContrllers
         {
             DataResult result = new DataResult()
             {
-                verifiaction = false
+                Verifiaction = false
             };
             try
             {
@@ -92,12 +92,12 @@ namespace Sky.Web.WebApi.Controllers.RolesContrllers
                 {
                     _rolesRepsonsityService.Delete(id.Trim());
 
-                    result.verifiaction = true;
-                    result.message = "删除成功!";
+                    result.Verifiaction = true;
+                    result.Message = "删除成功!";
                 }
                 else
                 {
-                    result.message = "删除失败!";
+                    result.Message = "删除失败!";
                 }
             } 
             finally
@@ -119,14 +119,14 @@ namespace Sky.Web.WebApi.Controllers.RolesContrllers
         {
             DataResult result = new DataResult
             {
-                verifiaction = false
+                Verifiaction = false
             };
 
             try
             {
                 if (_rolesRepsonsityService.IsExists(x => x.RolesName == _roleEntity.RolesName))
                 {
-                    result.message = "因角色名称重复,修改失败!";
+                    result.Message = "因角色名称重复,修改失败!";
                     return JObject.FromObject(result);
                 }
 
@@ -145,12 +145,12 @@ namespace Sky.Web.WebApi.Controllers.RolesContrllers
                 });
                 if (a > 0)
                 {
-                    result.verifiaction = true;
-                    result.message = "更新成功";
+                    result.Verifiaction = true;
+                    result.Message = "更新成功";
                 }
                 else
                 {
-                    result.message = "修改失败,可能是数据不存在或已删除!";
+                    result.Message = "修改失败,可能是数据不存在或已删除!";
                 }
             } 
             finally
@@ -173,13 +173,13 @@ namespace Sky.Web.WebApi.Controllers.RolesContrllers
         {
             DataResult result = new DataResult()
             {
-                verifiaction = false
+                Verifiaction = false
             };
             try
             {
                 if (_rolesRepsonsityService.IsExists(x => x.RolesName == _userRoleEntity.RolesName))
                 {
-                    result.message = "角色名称已经存在!";
+                    result.Message = "角色名称已经存在!";
                     return JObject.FromObject(result);
                 }
 
@@ -193,8 +193,8 @@ namespace Sky.Web.WebApi.Controllers.RolesContrllers
                 };
                 _rolesRepsonsityService.Insert(userRoleEntity);
 
-                result.verifiaction = true;
-                result.message = "写入成功!";
+                result.Verifiaction = true;
+                result.Message = "写入成功!";
             } 
             finally
             {

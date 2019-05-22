@@ -7,8 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Sky.Common;
 using Sky.Web.WebApi.Jwt;
 using Microsoft.Extensions.DependencyInjection;
-using Sky.Web.WebApi.ReturnViewModel;
-using Sky.Web.WebApi.PostViewModel;
+using Sky.Web.WebApi.Models;
 using Newtonsoft.Json.Linq;
 using Sky.RepsonsityService.IService; 
 using Microsoft.AspNetCore.Authorization; 
@@ -38,8 +37,8 @@ namespace Sky.Web.WebApi.Controllers
         {
             DataResult result = new DataResult()
             {
-                verifiaction = false,
-                message="这是测试",
+                Verifiaction = false,
+                Message="这是测试",
 
             };
             
@@ -56,15 +55,17 @@ namespace Sky.Web.WebApi.Controllers
         [HttpPost]
         public JObject GetToken([FromBody]Post_UserViewModel obj)
         {
-            DataResult result = new DataResult();
-            result.verifiaction = false;
+            DataResult result = new DataResult
+            {
+                Verifiaction = false
+            };
             try
             {
-                string name = obj.name;
-                string password = obj.password;
+                string name = obj.Name;
+                string password = obj.Password;
                 if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(password))
                 {
-                    result.message = "账号或者密码不能为空!";
+                    result.Message = "账号或者密码不能为空!";
                     return JObject.FromObject(result);
                 }
 
@@ -72,14 +73,14 @@ namespace Sky.Web.WebApi.Controllers
 
                 if (entity != null)
                 {
-                    result.rows = _jwtAuthorization.CreateToken(entity);
-                    result.verifiaction = true;
-                    result.message = "登陆成功!";
+                    result.Rows = _jwtAuthorization.CreateToken(entity);
+                    result.Verifiaction = true;
+                    result.Message = "登陆成功!";
                 }
                 else
                 {
-                    result.message = "获取token令牌失败!";
-                    result.verifiaction = true;
+                    result.Message = "获取token令牌失败!";
+                    result.Verifiaction = true;
                 }
             }
             finally
@@ -98,21 +99,23 @@ namespace Sky.Web.WebApi.Controllers
         [HttpPost]
         public JObject LoginOut(string uid)
         {
-            DataResult result = new DataResult();
-            result.verifiaction = false;
+            DataResult result = new DataResult
+            {
+                Verifiaction = false
+            };
             try
             {
                 if (string.IsNullOrEmpty(uid))
                 {
-                    result.message = "用户ID不能为空!";
+                    result.Message = "用户ID不能为空!";
                 }
 
                 var jtoken = _jwtAuthorization.GetCurrentToken();
                 if (string.Format("{0}", jtoken.Payload["ID"]) == uid)
                 {
                     _cacheService.Remove(uid);
-                    result.verifiaction = true;
-                    result.message = "退出成功!";
+                    result.Verifiaction = true;
+                    result.Message = "退出成功!";
                 }
             }
             finally

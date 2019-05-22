@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Sky.Web.WebApi.ReturnViewModel;
+using Sky.Web.WebApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,8 +39,8 @@ namespace Sky.Web.WebApi.Commons
         {
             DataResult result = new DataResult()
             {
-                verifiaction = false,
-                message = "管道失效" + context.Request.Host.Value.ToString()
+                Verifiaction = false,
+                Message = "管道失效" + context.Request.Host.Value.ToString()
             };
 
             try
@@ -50,21 +50,21 @@ namespace Sky.Web.WebApi.Commons
                 {
                     if (!_cacheService.Exists(token.Payload["ID"].ToString()))
                     {
-                        result.statecode = (int)HttpStatusCode.Forbidden;
-                        result.message = "token失效,请重新登录!";
+                        result.Statecode = (int)HttpStatusCode.Forbidden;
+                        result.Message = "token失效,请重新登录!";
                         return context.Response.WriteAsync(JsonConvert.SerializeObject(result));
                     }
                     else
                     {
-                        result.verifiaction = true;
+                        result.Verifiaction = true;
                     }
                 }
 
             }
             catch (Exception ex)
             {
-                result.statecode = (int)HttpStatusCode.InternalServerError;
-                result.message = ex.Message.ToString();
+                result.Statecode = (int)HttpStatusCode.InternalServerError;
+                result.Message = ex.Message.ToString();
                 return context.Response.WriteAsync(JsonConvert.SerializeObject(result));
             }
             finally

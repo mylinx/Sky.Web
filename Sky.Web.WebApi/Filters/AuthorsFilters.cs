@@ -5,7 +5,7 @@ using Sky.Web.WebApi.Jwt;
 using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Sky.Web.WebApi.ReturnViewModel;
+using Sky.Web.WebApi.Models;
 using System.Net;
 
 namespace Microsoft.AspNetCore.Mvc
@@ -26,7 +26,7 @@ namespace Microsoft.AspNetCore.Mvc
         {
             DataResult result = new DataResult()
             {
-                verifiaction = false,
+                Verifiaction = false,
             };
 
             try
@@ -36,8 +36,8 @@ namespace Microsoft.AspNetCore.Mvc
                 {
                     if (!_cacheService.Exists(token.Payload["ID"].ToString()))
                     {
-                        result.statecode = (int)HttpStatusCode.Unauthorized;
-                        result.message = "token失效,请重新登录!";
+                        result.Statecode = (int)HttpStatusCode.Unauthorized;
+                        result.Message = "token失效,请重新登录!";
                         return Task.FromResult(result);
                     }
                 }

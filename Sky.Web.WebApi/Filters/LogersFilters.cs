@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using Sky.RepsonsityService.IService;
-using Sky.Web.WebApi.ReturnViewModel;
+using Sky.Web.WebApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,21 +24,22 @@ namespace Microsoft.AspNetCore.Mvc
 
         public override void OnException(ExceptionContext context)
         {
-            LogerEntity entity = new LogerEntity();
-
-            entity.ID = Guid.NewGuid().ToString();
-            entity.LogAction = context.ActionDescriptor.RouteValues["action"];
-            entity.LogController = context.ActionDescriptor.RouteValues["controller"];
-            entity.LogDate = DateTime.Now.ToString();
-            entity.Loger = context.HttpContext.Request.Host.Value;
-            entity.LogContents = context.Exception.Message.ToString();
+            LogerEntity entity = new LogerEntity
+            {
+                ID = Guid.NewGuid().ToString(),
+                LogAction = context.ActionDescriptor.RouteValues["action"],
+                LogController = context.ActionDescriptor.RouteValues["controller"],
+                LogDate = DateTime.Now.ToString(),
+                Loger = context.HttpContext.Request.Host.Value,
+                LogContents = context.Exception.Message.ToString()
+            };
             _logerRepsonsityService.InsertAsync(entity);
             _logerRepsonsityService.SaveChange();
             DataResult result = new DataResult()
             {
-                verifiaction = false,
-                statecode = (int)HttpStatusCode.ExpectationFailed,
-                message= context.Exception.Message.ToString()
+                Verifiaction = false,
+                Statecode = (int)HttpStatusCode.ExpectationFailed,
+                Message= context.Exception.Message.ToString()
             };  
             context.Result = new BadRequestObjectResult(result); 
         }

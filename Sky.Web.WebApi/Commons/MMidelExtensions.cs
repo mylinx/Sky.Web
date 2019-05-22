@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
-using Sky.Web.WebApi.ReturnViewModel;
+using Sky.Web.WebApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,16 +18,16 @@ namespace Microsoft.AspNetCore.Builder
             //DateTime dateTime=
             DataResult result = new DataResult()
             {
-                verifiaction = true,
-                message = "中间件的另一种写法"
+                Verifiaction = true,
+                Message = "中间件的另一种写法"
             };
-            Func<RequestDelegate, RequestDelegate> middleware = next =>
-            { 
+            RequestDelegate middleware(RequestDelegate next)
+            {
                 return context =>
-                { 
+                {
                     return context.Response.WriteAsync(JsonConvert.SerializeObject(result));
                 };
-            };
+            }
             return app.Use(middleware);
         }
     }

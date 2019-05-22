@@ -10,9 +10,8 @@ using Newtonsoft.Json.Linq;
 using Sky.RepsonsityService.IService;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
-using Sky.Web.WebApi.ReturnViewModel;
-using System.Linq.Expressions;
-using Sky.Web.WebApi.PostViewModel;
+using Sky.Web.WebApi.Models;
+using System.Linq.Expressions; 
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Authorization;
 
@@ -52,9 +51,9 @@ namespace Sky.Web.WebApi.Controllers.PerssionControllers
 
         public async Task<JObject> AddOrUpdataPerssion(PerssionEntity perssionEntity, int IsEnable)
         {
-            DataResult dataResult = new DataResult()
+            DataResult result = new DataResult()
             {
-                verifiaction = false
+                Verifiaction = false
             };
 
             try
@@ -71,8 +70,8 @@ namespace Sky.Web.WebApi.Controllers.PerssionControllers
                     //查询是否存在数据,存在则更新,不存在则新增
                     if (!_perssionRepsonsityService.IsExists(x => x.ID == perssionEntity.ID))
                     {
-                        dataResult.message = "删除失败,可能该数据被删除!";
-                        return JObject.FromObject(dataResult);
+                        result.Message = "删除失败,可能该数据被删除!";
+                        return JObject.FromObject(result);
                     }
                     else
                     {
@@ -94,13 +93,13 @@ namespace Sky.Web.WebApi.Controllers.PerssionControllers
                     }
                 }
 
-                dataResult.verifiaction = true;
-                dataResult.message = "新增成功!";
+                result.Verifiaction = true;
+                result.Message = "新增成功!";
             }
             finally
             {
             }
-            return JObject.FromObject(dataResult);
+            return JObject.FromObject(result);
         }
 
 
@@ -112,9 +111,9 @@ namespace Sky.Web.WebApi.Controllers.PerssionControllers
         [HttpDelete]
         public JObject DeletePersionAnsy(string ID)
         {
-            DataResult dataResult = new DataResult()
+            DataResult result = new DataResult()
             {
-                verifiaction = false
+                Verifiaction = false
             };
 
             try
@@ -123,19 +122,19 @@ namespace Sky.Web.WebApi.Controllers.PerssionControllers
                 {
                     _perssionRepsonsityService.Delete(ID.Trim());
 
-                    dataResult.verifiaction = true;
-                    dataResult.message = "删除成功!";
+                    result.Verifiaction = true;
+                    result.Message = "删除成功!";
                 }
                 else
                 {
-                    dataResult.message = "删除失败!ID不能为空";
+                    result.Message = "删除失败!ID不能为空";
                 }
             }
             finally
             {
 
             }
-            return JObject.FromObject(dataResult); 
+            return JObject.FromObject(result); 
         }
 
 

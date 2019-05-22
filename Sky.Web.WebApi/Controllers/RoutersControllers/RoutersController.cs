@@ -6,8 +6,7 @@ using Sky.Common;
 using Sky.Entity;
 using Sky.RepsonsityService.IService;
 using Sky.Web.WebApi.Jwt;
-using Sky.Web.WebApi.PostViewModel;
-using Sky.Web.WebApi.ReturnViewModel;
+using Sky.Web.WebApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,7 +45,7 @@ namespace Sky.Web.WebApi.Controllers.RoutersControllers
         {
             DataResult result = new DataResult()
             {
-                verifiaction = false
+                Verifiaction = false
             };
             Expression<Func<RoutersEntity, bool>> expression = null;
             if (!name.IsEmpty())
@@ -60,8 +59,8 @@ namespace Sky.Web.WebApi.Controllers.RoutersControllers
             treeViewModels = AddChildN("0");
             if (treeViewModels.Count > 0)
             {
-                result.verifiaction = true;
-                result.rows = treeViewModels.OrderBy(x=>x.Sorts);
+                result.Verifiaction = true;
+                result.Rows = treeViewModels.OrderBy(x=>x.Sorts);
             }
             return JsonConvert.SerializeObject(result);
         }
@@ -89,16 +88,18 @@ namespace Sky.Web.WebApi.Controllers.RoutersControllers
                 {
                     if (router.RoutersID == item.ID)
                     {
-                        TreeChildViewModel childViewModel = new TreeChildViewModel();
-                        childViewModel.Id = item.ID;
-                        childViewModel.PId = item.ParentID;
-                        childViewModel.PathRouter = item.PathRouter;
-                        childViewModel.Component = item.Component;
-                        childViewModel.Name = item.Name;
-                        childViewModel.Meta_icon = item.Meta_icon;
-                        childViewModel.Meta_title = item.Meta_title;
-                        childViewModel.Meta_content = item.Meta_content;
-                        childViewModel.Sorts = item.Sorts;
+                        TreeChildViewModel childViewModel = new TreeChildViewModel
+                        {
+                            Id = item.ID,
+                            PId = item.ParentID,
+                            PathRouter = item.PathRouter,
+                            Component = item.Component,
+                            Name = item.Name,
+                            Meta_icon = item.Meta_icon,
+                            Meta_title = item.Meta_title,
+                            Meta_content = item.Meta_content,
+                            Sorts = item.Sorts
+                        };
                         childViewModel.TreeChildren = GetChildList(childViewModel);
                         list.Add(childViewModel);
                         break;

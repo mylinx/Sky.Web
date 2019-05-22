@@ -10,7 +10,7 @@ using System.Linq;
 namespace Sky.RepsonsityService.IService
 {
 
-public interface IPessiondetailRepsonsityService: IResponsitryBase<PessiondetailEntity>
+public interface IMenuroleperssionRepsonsityService: IResponsitryBase<MenuroleperssionEntity>
 {
   	
 }
