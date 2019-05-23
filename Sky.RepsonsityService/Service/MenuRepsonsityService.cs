@@ -15,7 +15,7 @@ namespace Sky.RepsonsityService.Service
 { 
 	public class  MenuRepsonsityService : ResponsitryBase< MenuEntity>, IMenuRepsonsityService
 	{
-	  	 public  MenuRepsonsityService() :base("default", DBType.MySql)
+	  	 public  MenuRepsonsityService() :base("MySqlConnection", DBType.MySql)
 	        {
 	
 	        }

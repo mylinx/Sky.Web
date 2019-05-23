@@ -112,7 +112,7 @@ namespace Sky.Web.WebApi.Controllers
                 if (!string.IsNullOrEmpty(id))
                 {
                     _userRepsonsityService.Delete(id.Trim());
-                    _userRepsonsityService.SaveChange();
+                    //_userRepsonsityService.SaveChange();
                     result.Verifiaction = true;
                     result.Message = "删除成功!";
                 }
@@ -185,7 +185,7 @@ namespace Sky.Web.WebApi.Controllers
                      m=>m.Email,
                      m=>m.Remark
                 });
-                _userRepsonsityService.SaveChange();
+                //_userRepsonsityService.SaveChange();
                 result.Verifiaction = true;
                 result.Message = "写入成功!";
             }
@@ -273,7 +273,7 @@ namespace Sky.Web.WebApi.Controllers
                     Remark = _userEntity.Remark
                 };
                 _userRepsonsityService.Insert(userEntity);
-                _userRepsonsityService.SaveChange();
+               _userRepsonsityService.SaveChange();
                 result.Verifiaction = true;
                 result.Message = "写入成功!";
             }

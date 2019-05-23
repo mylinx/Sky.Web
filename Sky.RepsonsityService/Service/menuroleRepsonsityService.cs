@@ -15,7 +15,7 @@ namespace Sky.RepsonsityService.Service
 { 
 	public class  MenuroleRepsonsityService : ResponsitryBase< MenuroleEntity>, IMenuroleRepsonsityService
 	{
-	  	 public MenuroleRepsonsityService() :base("default", DBType.MySql)
+	  	 public MenuroleRepsonsityService() :base("MySqlConnection", DBType.MySql)
 	        {
 	
 	        }

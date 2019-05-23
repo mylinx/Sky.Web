@@ -38,6 +38,8 @@ namespace Sky.Web.WebApi.Controllers
         [HttpGet]
         public JObject GetMenusByRoleID(string roleid)
         {
+
+            roleid = "76d71a4d-daa1-4b9e-885a-33123213213";
             DataResult result = new DataResult
             {
                 Verifiaction = false
@@ -52,12 +54,13 @@ namespace Sky.Web.WebApi.Controllers
                            join menu in _menuRepsonsityService.GetAllList().DefaultIfEmpty() on rolesmenus.MenuID equals menu.id
                            select new
                            {
+                               ID=menu.id,
                                MenuName= menu.menuname,
                                Icon = menu.meta_icon,
                                ParentID = menu.parentid,
                                Router = menu.path
                            };
-                
+                result.Verifiaction = true;
                 result.Rows = list;
 
             }
